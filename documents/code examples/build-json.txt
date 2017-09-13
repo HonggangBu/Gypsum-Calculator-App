@@ -1,0 +1,29 @@
+{
+  "android": {
+    "release": {
+      "keystore": "c:\\HonggangBu.keystore",
+      "storePassword": "bugu7879",
+      "alias": "Honggang",
+      "password": "bugu7879",
+      "keystoreType": ""
+    }
+  },
+
+
+  "ios": {
+    "debug": {
+      "developmentTeam": "FM3AXHLL3T"
+    },
+
+    "release": {
+      "developmentTeam": "FM3AXHLL3T",
+      "codeSignIdentity": "iPhone Distribution",
+      "provisioningProfile": "d37d5864-0481-449b-88a1-66fa17b9510e",
+      "packageType": "app-store"
+    }
+  }
+
+}
+
+
+ 

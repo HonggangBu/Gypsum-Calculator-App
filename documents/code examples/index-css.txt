@@ -1,0 +1,139 @@
+
+h1 {
+    font-size: 24px;
+    font-weight: normal;
+    margin: 5px, 0;
+    padding: 0;
+    text-align: center;
+}
+
+.white-bold-font {
+    font-weight: bold;
+    color: white;
+    font-family:Cambria !important;
+    font-size:15pt !important;
+}
+
+.ui-header .ui-title {
+    overflow: visible  !important;
+    white-space: normal  !important;
+}
+ 
+.big-button{
+    height:40px;
+    background-color:lightcyan !important;
+    opacity:0.6;
+    vertical-align:central;
+    text-align:left !important;
+}
+
+.big-button-font{
+    font-weight:bold; 
+    font-size:20px; 
+    position:relative;
+    top:25%;
+}
+
+.non-homepage-margin{
+    margin: 10px;
+}
+
+.error-msg {
+    text-align: center;
+    font-weight: bold;
+    color: red;
+}
+ 
+.border-top {
+    border-top-style: double;
+    border-top-color: dimgrey;
+    border-top-width: thick;
+}
+
+.label-legend {
+    font-weight: bold;
+    color: indigo;
+}
+
+.not-displayed {
+    display: none;
+}
+
+.image-wrap {
+    display:inline-block;
+    position:relative;
+
+}
+.corner-button {
+    position:absolute !important;
+    top:0 !important;
+    right:0 !important;
+
+}
+
+.collipsible-font{
+    font-size:20px !important;
+    font-weight:bold !important;
+}
+
+.result-text{
+    font-size:large;
+    font-weight:bold;
+    margin-bottom:5px;
+}
+
+.text-bold {
+    font-weight: bold;
+}
+ 
+.font-size-large {
+    font-size: large;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.ui-collapsible-heading-toggle {
+    white-space : normal !important;
+}
+
+
+.wrapper {
+    border:1px solid #000;
+    display:inline-block;
+    position:relative;
+    width:100% !important;
+}
+
+
+.resetbutton {
+    position:absolute !important;
+    right:0 !important;
+    top:0 !important;
+    background-color:lightgray !important;
+    border:0 !important;
+    width:80px !important;
+    font-size:10pt !important;
+}
+
+.resetinput {
+    padding-right:70px !important; /* button padding */
+    background-color:transparent !important;
+    border:0 !important;
+}
+
+.inputalign{
+    padding-left:80px !important; 
+    text-align:left !important; 
+    font-weight:bold !important;
+}
+
+.resultinputalign{
+    text-align:center !important; 
+    font-weight:bold !important;
+}
+
+.tips{
+    font-size:15pt;
+}

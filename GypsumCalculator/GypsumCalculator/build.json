@@ -1,0 +1,29 @@
+{
+  "android": {
+    "release": {
+      "keystore": "",
+      "storePassword": "",
+      "alias": "",
+      "password": "",
+      "keystoreType": ""
+    }
+  },
+
+
+
+
+  "ios": {
+    "debug": {
+      "developmentTeam": "FM3AXHLL3T"
+    },
+
+    "release": {
+      "developmentTeam": "FM3AXHLL3T",
+      "codeSignIdentity": "iPhone Distribution",
+      "provisioningProfile": "",
+      "packageType": "app-store"
+    }
+  }
+
+
+}

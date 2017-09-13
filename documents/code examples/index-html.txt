@@ -1,0 +1,841 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!--
+        Customize the content security policy in the meta tag below as needed. Add 'unsafe-inline' to default-src to enable inline JavaScript.
+        For details, see http://go.microsoft.com/fwlink/?LinkID=617521
+    -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *;
+               script-src 'self' 'unsafe-inline' 'unsafe-eval'; ">
+
+    <meta name="format-detection" content="telephone=no">
+    <meta name="msapplication-tap-highlight" content="no">
+    <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width">
+
+    <link rel="stylesheet" type="text/css" href="css/index.css">
+    <link rel="stylesheet" href="css/jquery.mobile-1.4.5.min.css" />
+
+    <script type="text/javascript" src="cordova.js"></script>
+    <script type="text/javascript" src="scripts/platformOverrides.js"></script>
+    <script type="text/javascript" src="scripts/DisplayPdf.js"></script>
+    <script type="text/javascript" src="scripts/index.js"></script>
+    <script src="scripts/jquery-2.2.4.min.js"></script>
+    <script src="scripts/jquery.mobile-1.4.5.min.js"></script>
+    <title>NDSU Grazing Calculator</title>
+</head>
+<body>
+
+
+
+    <!--Home Page-->
+    <div data-role="page" id="HomePage">
+        <div data-role="header" class="ui-header-fullscreen" style="height:100px !important;">
+            <div style="float:left;">
+                <img src="images/GrazingIcon1024.png" height="70" />
+            </div>
+            <h1 class="white-bold-font">NDSU Grazing Calculator</h1>
+        </div>
+
+        <div data-role="main" style="margin-bottom:5px; margin-top:10px; margin-left:20px; margin-right:20px;">
+            <br />
+
+            <div data-role="collapsibleset" data-theme="b" style="opacity:0.6;">
+                <div data-role="collapsible">
+                    <h1><span class="collipsible-font">Brief Intro</span></h1>
+                    <p style="text-align:justify;">
+                        Establishing the correct stocking rate is critical in optimizing forage production and maintaining animal performance while ensuring the sustained health of the grazing resources.
+                        Accurately calculating range and forage production of grazing resources is important when estimating carrying capacity and stocking rate.
+                        The most accurate method to calculate forage production is the clip-and-weigh method.
+                        The NDSU Grazing Calculator helps land manager/owner estimate carrying capacity and set initial stocking rate for their grazing resources.
+                        <br /><br />
+                        Carrying capacity is a measurement of how much forage a unit or piece of ground is able to produce on an average year.
+                        The carrying capacity is the maximum stocking rate possible that is consistent with maintaining or improving the forage and plant community,
+                        and other related resources. Stocking rate is the number of animals grazing a unit of land for a specific time period.
+                        Stocking rate is one of the most important grazing management decisions a rancher or land manager makes.
+                    </p>
+                </div>
+                <div data-role="collapsible">
+                    <h1><span class="collipsible-font">Document</span></h1>
+                    <ul data-role="listview" data-inset="true">
+                        <!--<li>
+                            <a href="https://www.ag.ndsu.edu/publications/livestock/determining-carrying-capacity-and-stocking-rates-for-range-and-pasture-in-north-dakota"
+                               data-rel="external" target="_blank" class="ui-btn ui-icon-info ui-btn-icon-right">Web Version</a>
+                        </li>-->
+                        <li><a href="#" class="ui-btn ui-icon-info ui-btn-icon-right" id="StockingRateCarryingCapacityDoc">Stocking Rate & <br /> Carrying Capacity</a></li>
+                        <li><a href="#" class="ui-btn ui-icon-info ui-btn-icon-right" id="ForageProductionDoc">Forage Production</a></li>
+                    </ul>
+                </div>
+                <div data-role="collapsible" style="margin-bottom: 0;">
+                    <h1><span class="collipsible-font">Contact</span></h1>
+                    <h5>Any questions or concerns, please contact:</h5>
+                    <div>
+                        <img src="images/Meehan.jpeg" alt="Dr. Miranda Meehan" style="float:left; margin-right:10px; height:80px">
+                        <p>Dr. <b>Miranda Meehan</b></p>
+                        <p style="font-size:small; font-weight:bold;">Livestock Environmental Stewardship Specialist</p>
+                    </div>
+                    <br />
+                    <div style="font-size:10pt;">
+                        <p><u>Phone:</u> <b>701-231-7683</b></p>
+                        <p><u>Email:</u> <b>miranda.meehan@ndsu.edu</b></p>
+                        <p><u>Office:</u> <b>191 Hultz Hall, NDSU</b></p>
+                    </div>
+                </div>
+
+
+            </div>
+
+            <div>
+                <a id="stockingRateBtn" href="#StockingRatePage" class="ui-btn ui-icon-action ui-btn-icon-left big-button"><span class="big-button-font">Stocking Rate**</span></a>
+                <a id="forageProductionBtn" href="#ForageProductionPage" class="ui-btn ui-icon-action ui-btn-icon-left big-button"><span class="big-button-font">Forage Production**</span></a>
+                <a id="carryingCapacityBtn" href="#" class="ui-btn ui-icon-action ui-btn-icon-left big-button"><span class="big-button-font">Carrying Capacity**</span></a>
+            </div>
+
+            <div>
+                <label style="color: yellow;">
+                    <span class="tips">Tips:</span> Any title followed by " <span class="tips">**</span> " has a definition that can be viewed by tapping and holding the title for one second;
+                    any title followed by " <span class="tips">*</span> " has a definition that can be viewed by tapping the title.
+                </label>
+            </div>
+
+        </div>
+        <div style="margin:0;">
+            <img src="images/pasture.jpg" alt="pasture" style="width:100%; margin-top:0;" />
+        </div>
+    </div>
+
+
+    <div data-role="page" id="StockingRatePage">
+        <div data-role="header" data-position="fixed" class="ui-header-fixed ui-header-fullscreen">
+            <a href="#HomePage" data-transition="pop" class="ui-btn ui-corner-all ui-shadow ui-icon-home ui-btn-icon-left"><span style="color:indigo;font-weight:bold;font-size:15px;">Home</span></a>
+            <h1 class="white-bold-font">Stocking Rate Calculation</h1>
+        </div>
+        <div data-role="panel" id="AnimalClassList" data-swipe-close="true" data-theme="b">
+            <h3>List of Animal Classes</h3>
+            <ul data-role="listview">
+                <li>1,000-lb. cow, dry</li>
+                <li>1,000-lb. cow, with calf</li>
+                <li>1,100-lb. cow, with calf</li>
+                <li>1,200-lb. cow, with calf</li>
+                <li>1,300-lb. cow, with calf</li>
+                <li>1,400-lb. cow, with calf</li>
+                <li>1,500-lb. cow, with calf</li>
+                <li>Cattle bull, mature</li>
+                <li>Weaned calves to yearling</li>
+                <li>Yearling cattle (600-800 lb.)</li>
+                <li>Two-year-old cattle (800-1,000 lb.)</li>
+                <li>Bison cow, mature</li>
+                <li>Bison bull, mature</li>
+                <li>Horse, mature</li>
+                <li>Sheep, dry ewe</li>
+                <li>Sheep, mature with lamb</li>
+                <li>Sheep ram</li>
+                <li>Goat, mature</li>
+                <li>Deer, white-tailed, mature</li>
+                <li>Deer, mule, mature</li>
+                <li>Elk, mature</li>
+                <li>Antelope, mature</li>
+                <li>Sheep, bighorn, mature</li>
+                <li>Jackrabbit, white-tailed</li>
+                <li>Prairie dog</li>
+            </ul>
+        </div>
+
+        <div data-role="main" class="non-homepage-margin">
+            <div>
+                <fieldset class="ui-field-contain">
+                    <label for="ClassQuantity"><span class="label label-legend">Number of Animal classes &nbsp;</span><a href="#AnimalClassList" class="ui-btn ui-icon-info ui-btn-icon-notext ui-btn-inline ui-corner-all"></a></label>
+                    <select name="ClassQuantity" id="ClassQuantity" class="ui-select"></select>
+                </fieldset>
+            </div>
+            <div class="border-top">
+                <h4>Below please select the animal class, then input the number of head and the number of month for each selected animal class</h4>
+            </div>
+            <div id="AnimalClassInput" style="background-color:lightgoldenrodyellow;">
+                <div data-role="collapsible" style="border-bottom-style:dotted; border-bottom-color:darksalmon;">
+                    <h2>Animal Class 1</h2>
+                    <fieldset class="ui-field-contain">
+                        <select name="ac1" id="ac1" class="ui-select">
+                            <option value="1">1,000-lb. cow, dry</option>
+                            <option value="2">1,000-lb. cow, with calf</option>
+                            <option value="3">1,100-lb. cow, with calf</option>
+                            <option value="4">1,200-lb. cow, with calf</option>
+                            <option value="5">1,300-lb. cow, with calf</option>
+                            <option value="6">1,400-lb. cow, with calf</option>
+                            <option value="7">1,500-lb. cow, with calf</option>
+                            <option value="8">Cattle bull, mature</option>
+                            <option value="9">Weaned calves to yearling</option>
+                            <option value="10">Yearling cattle (600-800 lb.)</option>
+                            <option value="11">Two-year-old cattle (800-1,000 lb.)</option>
+                            <option value="12">Bison cow, mature</option>
+                            <option value="13">Bison bull, mature</option>
+                            <option value="14">Horse, mature</option>
+                            <option value="15">Sheep, dry ewe</option>
+                            <option value="16">Sheep, mature with lamb</option>
+                            <option value="17">Sheep ram</option>
+                            <option value="18">Goat, mature</option>
+                            <option value="19">Deer, white-tailed, mature</option>
+                            <option value="20">Deer, mule, mature</option>
+                            <option value="21">Elk, mature</option>
+                            <option value="22">Antelope, mature</option>
+                            <option value="23">Sheep, bighorn, mature</option>
+                            <option value="24">Jackrabbit, white-tailed</option>
+                            <option value="25">Prairie dog</option>
+                        </select>
+                    </fieldset>
+                    <fieldset class="ui-field-contain">
+                        <label for="hn1"><span class="label label-legend">Number of Head</span></label>
+                        <input type="text" name="hn1" id="hn1" value="1" data-clear-btn="true" placeholder="a non-negative integer value"
+                               style="text-align:center; font-weight:bold;" />
+                    </fieldset>
+                    <fieldset class="ui-field-contain">
+                        <label for="MonthNumber1"><span class="label label-legend">Number of Months</span></label>
+                        <input type="text" name="mn1" id="mn1" value="1" data-clear-btn="true" placeholder="a non-negative integer value"
+                               style="text-align:center; font-weight:bold;" />
+                    </fieldset>
+                </div>
+            </div>
+
+
+
+            <div data-role="navbar" class="border-top">
+                <ul>
+                    <li><a href="#HomePage" data-icon="home" data-transition="flip"><span class="font-size-large text-bold">Home</span></a></li>
+                    <li><a href="#" data-icon="arrow-r" id="StockingRatePageOneForward" data-transition="slideup"><span class="font-size-large text-bold">Forward</span></a></li>
+                </ul>
+            </div>
+        </div>
+
+
+
+
+    </div>
+
+    <div data-role="page" id="StockingRateResultPage">
+        <div data-role="header" data-position="fixed" class="ui-header-fixed ui-header-fullscreen">
+            <a href="#HomePage" data-transition="pop" class="ui-btn ui-corner-all ui-shadow ui-icon-home ui-btn-icon-left"><span style="color:indigo;font-weight:bold;font-size:15px;">Home</span></a>
+            <h1 class="white-bold-font">Stocking Rate Result</h1>
+        </div>
+
+        <div data-role="main" class="ui-content">
+            <h3 id="AAueLabel" class="text-center label label-legend">Average AUE*</h3>
+            <input type="text" name="Average_AUE" id="Average_AUE" class="result-text" style="text-align: center;" value="" />
+            <br />
+            <h3 id="TAumLabel" class="text-center label label-legend">Total AUMs*</h3>
+            <input type="text" name="Total_AUM" id="Total_AUM" class="result-text" style="text-align: center;" value="" />
+            <br />
+            <div data-role="navbar" class="border-top">
+                <ul>
+                    <li><a href="#StockingRatePage" data-icon="arrow-l" id="StockRateResult_Back" data-transition="slidedown"><span class="font-size-large text-bold">Back</span></a></li>
+                    <li><a href="#HomePage" data-icon="home" data-transition="flip"><span class="font-size-large text-bold">Home</span></a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div data-role="page" id="ForageProductionPage">
+        <div data-role="header" data-position="fixed" class="ui-header-fixed ui-header-fullscreen">
+            <a href="#HomePage" data-transition="pop" class="ui-btn ui-corner-all ui-shadow ui-icon-home ui-btn-icon-left"><span style="color:indigo;font-weight:bold;font-size:15px;">Home</span></a>
+            <h1 class="white-bold-font">Forage Production Calculation</h1>
+        </div>
+
+        <div data-role="main" class="non-homepage-margin">
+            <div id="FieldTypeSelectDiv">
+                <fieldset class="ui-field-contain" data-role="controlgroup" data-type="vertical">
+                    <legend><span class="label label-legend">Pasture Type</span></legend>
+                    <label for="ft_rp">Rangeland</label>
+                    <input type="radio" name="FieldTypeSelect" id="ft_rp" value="ft_rp" checked="checked">
+                    <label for="ft_tg">Tame Grass</label>
+                    <input type="radio" name="FieldTypeSelect" id="ft_tg" value="ft_tg">
+                    <label for="ft_rc">Row Crops</label>
+                    <input type="radio" name="FieldTypeSelect" id="ft_rc" value="ft_rc">
+                    <label for="ft_sg">Small Grains, Solid-seeded (Broadcast) Crops and Cover Crop Mixtures</label>
+                    <input type="radio" name="FieldTypeSelect" id="ft_sg" value="ft_sg">
+                </fieldset>
+            </div>
+
+            <div id="DryOrWetWeightMethodDiv" class="border-top">
+                <fieldset class="ui-field-contain" data-role="controlgroup" data-type="vertical">
+                    <legend><span class="label label-legend">Sample Weight Type</span></legend>
+                    <label for="DryWeight">Use Air-Dried Sample Weight</label>
+                    <input type="radio" name="WeightMethodSelect" id="DryWeight" value="DryWeight" checked="checked">
+                    <label for="WetWeight">Use Wet Sample Weight</label>
+                    <input type="radio" name="WeightMethodSelect" id="WetWeight" value="WetWeight">
+                </fieldset>
+            </div>
+
+            <div id="RcSgInputDiv" class="not-displayed border-top">
+                <fieldset class="ui-field-contain">
+                    <label><span class="label label-legend">Sample Weight Input</span></label>
+                    <h4>Input air-dried sample net weight(s). Separate multiple inputs with comma.</h4>
+                    <h4>Example: 130,120,139,93</h4>
+                    <h4>Sample Net Weight (unit: gram)</h4>
+                    <div class="wrapper">
+                        <input type="text" name="rcsgInput" id="rcsgInput" value="0" placeholder="multiple non-negative values"
+                               class="inputalign" />
+                        <button id="rcsgResetBtn" class="resetbutton">Reset</button>
+                    </div>
+                    <h5 id="recommendationNumberLabel"></h5>
+                </fieldset>
+            </div>
+
+            <div id="RangePastureWeightInputDiv" class="border-top">
+                <!--<fieldset class="ui-field-contain">-->
+                <br />
+                <label><span class="label label-legend">Sample Weight Input</span></label>
+                <h4>Input sample net weight(s) for each available field type. Separate multiple inputs for each field type with comma. Set 0 for any unavailable field type.</h4>
+                <h4>Example: 130,120,139,93</h4>
+                <div data-role="collapsible" data-collapsed="false">
+                    <h2>Sample Net Weight (unit: gram)</h2>
+                    <fieldset class="ui-field-contain">
+                        <label for="uplandLoamyBoth"><span class="label label-legend">Upland Loamy</span></label>
+                        <div class="wrapper">
+                            <input type="text" name="uplandLoamyBoth" id="uplandLoamyBoth" value="0" placeholder="multiple non-negative values"
+                                   class="inputalign" />
+                            <button id="rp_r1" class="resetbutton">Reset</button>
+                        </div>
+                    </fieldset>
+                    <fieldset class="ui-field-contain">
+                        <label for="uplandSandyBoth"><span class="label label-legend">Upland Sandy</span></label>
+                        <div class="wrapper">
+                            <input type="text" name="uplandSandyBoth" id="uplandSandyBoth" value="0" placeholder="multiple non-negative values"
+                                   class="inputalign" />
+                            <button id="rp_r2" class="resetbutton">Reset</button>
+                        </div>
+                    </fieldset>
+                    <fieldset class="ui-field-contain">
+                        <label for="uplandClayeyBoth"><span class="label label-legend">Upland Clayey</span></label>
+                        <div class="wrapper">
+                            <input type="text" name="uplandClayeyBoth" id="uplandClayeyBoth" value="0" placeholder="multiple non-negative values"
+                                   class="inputalign" />
+                            <button id="rp_r3" class="resetbutton">Reset</button>
+                        </div>
+                    </fieldset>
+                    <fieldset class="ui-field-contain">
+                        <label for="uplandShallowBoth"><span class="label label-legend">Upland Shallow</span></label>
+                        <div class="wrapper">
+                            <input type="text" name="uplandShallowBoth" id="uplandShallowBoth" value="0" placeholder="multiple non-negative values"
+                                   class="inputalign" />
+                            <button id="rp_r4" class="resetbutton">Reset</button>
+                        </div>
+                    </fieldset>
+                    <fieldset class="ui-field-contain">
+                        <label for="uplandVShallowBoth"><span class="label label-legend">Upland Very shallow/Thin claypan</span></label>
+                        <div class="wrapper">
+                            <input type="text" name="uplandVShallowBoth" id="uplandVShallowBoth" value="0" placeholder="multiple non-negative values"
+                                   class="inputalign" />
+                            <button id="rp_r5" class="resetbutton">Reset</button>
+                        </div>
+                    </fieldset>
+                    <fieldset class="ui-field-contain">
+                        <label for="lowlandOverflowBoth"><span class="label label-legend">Lowland Overflow</span></label>
+                        <div class="wrapper">
+                            <input type="text" name="lowlandOverflowBoth" id="lowlandOverflowBoth" value="0" placeholder="multiple more non-negative values"
+                                   class="inputalign" />
+                            <button id="rp_r6" class="resetbutton">Reset</button>
+                        </div>
+                    </fieldset>
+                    <fieldset class="ui-field-contain">
+                        <label for="lowlandWetmeadowBoth"><span class="label label-legend">Lowland Wet meadow</span></label>
+                        <div class="wrapper">
+                            <input type="text" name="lowlandWetmeadowBoth" id="lowlandWetmeadowBoth" value="0" placeholder="multiple more non-negative values"
+                                   class="inputalign" />
+                            <button id="rp_r7" class="resetbutton">Reset</button>
+                        </div>
+                    </fieldset>
+                </div>
+                <!--</fieldset>-->
+            </div>
+
+            <div id="PlantAndStageSelectDiv" class="border-top not-displayed">
+                <fieldset class="ui-field-contain">
+                    <label for="PlantTypeSelect"><span class="label label-legend">Plant Type</span></label>
+                    <select class="ui-select" id="PlantTypeSelect" name="PlantTypSelect">
+                        <optgroup label="Cool-season Grasses">
+                            <option>Wheatgrasses, needlegrasses, perennial, bromes, bluegrasses, fescues</option>
+                        </optgroup>
+                        <optgroup label="Warm-season Grasses">
+                            <option>Tall: bluestems, switchgrass</option>
+                            <option>Mid: side-oats grama</option>
+                            <option>Short: blue grama, buffalograss</option>
+                        </optgroup>
+                        <optgroup label="Other Range or Pasture Plants">
+                            <option>Forbs</option>
+                            <option>Shrubs</option>
+                        </optgroup>
+                    </select>
+                </fieldset>
+                <fieldset class="ui-field-contain">
+                    <label for="GrowthStageSelect"><span class="label label-legend">Growth Stage</span></label>
+                    <select class="ui-select" id="GrowthStageSelect" name="GrowthStageSelect">
+                        <option>Before Heading</option>
+                        <option>Headed</option>
+                        <option>Seed Ripe</option>
+                        <option>Leaves Dry</option>
+                        <option>Dormancy</option>
+                    </select>
+                </fieldset>
+            </div>
+
+        </div>
+
+        <div data-role="navbar" class="border-top">
+            <ul>
+                <li><a href="#HomePage" data-icon="home" data-transition="slidedown"><span class="font-size-large text-bold">Home</span></a></li>
+                <li><a href="" data-icon="arrow-r" id="ForageProduction_Forward" data-transition="flip"><span class="font-size-large text-bold">Forward</span></a></li>
+            </ul>
+        </div>
+
+    </div>
+
+
+    <div data-role="page" id="ForageProductionResultPage">
+        <div data-role="header" data-position="fixed" class="ui-header-fixed ui-header-fullscreen">
+            <a href="#HomePage" data-transition="pop" class="ui-btn ui-corner-all ui-shadow ui-icon-home ui-btn-icon-left"><span style="color:indigo;font-weight:bold;font-size:15px;">Home</span></a>
+            <h1 class="white-bold-font">Forage Production Result</h1>
+        </div>
+
+        <div data-role="main" class="non-homepage-margin">
+            <div id="NonRangePastureResultDiv">
+                <label for="ForageProductionResultOutput"><span class="label label-legend">Forage Production (lb/ac)</span></label>
+                <input type="text" name="ForageProductionResultOutput" id="ForageProductionResultOutput" class="result-text" style="text-align: center;" value="" />
+            </div>
+            <div id="RangePastureResultDiv">
+                <div data-role="collapsible" data-collapsed="false">
+                    <h2>Range / Pasture Forage Production (lb/ac)</h2>
+                    <fieldset class="ui-field-contain">
+                        <label for="uplandLoamyFP"><span class="label label-legend">Upland Loamy</span></label>
+                        <input type="text" name="uplandLoamyFP" id="uplandLoamyFP" value=""
+                               class="resultinputalign" />
+                    </fieldset>
+                    <fieldset class="ui-field-contain">
+                        <label for="uplandSandyFP"><span class="label label-legend">Upland Sandy</span></label>
+                        <input type="text" name="uplandSandyFP" id="uplandSandyFP" value=""
+                               class="resultinputalign" />
+                    </fieldset>
+                    <fieldset class="ui-field-contain">
+                        <label for="uplandClayeyFP"><span class="label label-legend">Upland Clayey</span></label>
+                        <input type="text" name="uplandClayeyFP" id="uplandClayeyFP" value=""
+                               class="resultinputalign" />
+                    </fieldset>
+                    <fieldset class="ui-field-contain">
+                        <label for="uplandShallowFP"><span class="label label-legend">Upland Shallow</span></label>
+                        <input type="text" name="uplandShallowFP" id="uplandShallowFP" value=""
+                               class="resultinputalign" />
+                    </fieldset>
+                    <fieldset class="ui-field-contain">
+                        <label for="uplandVShallowFP"><span class="label label-legend">Upland Very shallow/Thin claypan</span></label>
+                        <input type="text" name="uplandVShallowFP" id="uplandVShallowFP" value=""
+                               class="resultinputalign" />
+                    </fieldset>
+                    <fieldset class="ui-field-contain">
+                        <label for="lowlandOverflowFP"><span class="label label-legend">Lowland Overflow</span></label>
+                        <input type="text" name="lowlandOverflowFP" id="lowlandOverflowFP" value=""
+                               class="resultinputalign" />
+                    </fieldset>
+                    <fieldset class="ui-field-contain">
+                        <label for="lowlandWetmeadowFP"><span class="label label-legend">Lowland Wet meadow</span></label>
+                        <input type="text" name="lowlandWetmeadowFP" id="lowlandWetmeadowFP" value=""
+                               class="resultinputalign" />
+                    </fieldset>
+                </div>
+            </div>
+        </div>
+
+        <div data-role="navbar" class="border-top">
+            <ul>
+                <li><a href="#ForageProductionPage" data-icon="arrow-l" id="ForageProduction_Back" data-transition="flip"><span class="font-size-large text-bold">Back</span></a></li>
+                <li><a href="#HomePage" data-icon="home" data-transition="slidedown"><span class="font-size-large text-bold">Home</span></a></li>
+            </ul>
+        </div>
+    </div>
+
+
+
+    <div data-role="page" id="CarryingCapacityPageOne">
+        <div data-role="header" data-position="fixed" class="ui-header-fixed ui-header-fullscreen">
+            <a href="#HomePage" data-transition="pop" class="ui-btn ui-corner-all ui-shadow ui-icon-home ui-btn-icon-left"><span style="color:indigo;font-weight:bold;font-size:15px;">Home</span></a>
+            <h1 class="white-bold-font">Carrying Capacity Calculation</h1>
+        </div>
+
+        <div data-role="main" class="non-homepage-margin">
+            <div id="MajorLandTypeSelectionDiv">
+                <fieldset class="ui-field-contain">
+                    <label for="MLRA"><span class="label label-legend">Major Land Resource Areas of North Dakota</span></label>
+                    <select name="MLRA" id="MLRA" class="ui-select">
+                        <option value="53">53A&B</option>
+                        <option value="54">54</option>
+                        <option value="55">55A&B</option>
+                        <option value="56">56</option>
+                        <option value="58">58C&D</option>
+                    </select>
+                </fieldset>
+                <div style="width:100%; text-align:center;">
+                    <a href="#MapPage">
+                        <img src="images/map.jpeg" alt="ND region map" style="width:100%;" />
+                    </a>
+                    <p>(Click to view larger map)</p>
+                </div>
+            </div>
+
+            <div class="border-top">
+                <h4>Please input the acres for each combination of site type and vegetation type below.</h4>
+                <div data-role="collapsible" data-collapsed="false">
+                    <h2>Land Acres</h2>
+                    <fieldset class="ui-field-contain">
+                        <label for="uplandLoamy"><span class="label label-legend">Upland Loamy</span></label>
+                        <div class="wrapper">
+                            <input type="text" name="uplandLoamy" id="uplandLoamy" value="0" placeholder="a non-negative value"
+                                   class="inputalign" />
+                            <button id="ar1" class="resetbutton">Reset</button>
+                        </div>
+                        <div id="uplandLoamy-error-msg" class="error-msg not-displayed">
+                        </div>
+                    </fieldset>
+                    <fieldset class="ui-field-contain">
+                        <label for="uplandSandy"><span class="label label-legend">Upland Sandy</span></label>
+                        <div class="wrapper">
+                            <input type="text" name="uplandSandy" id="uplandSandy" value="0" placeholder="a non-negative value"
+                                   class="inputalign" />
+                            <button id="ar2" class="resetbutton">Reset</button>
+                        </div>
+                        <div id="uplandSandy-error-msg" class="error-msg not-displayed">
+                        </div>
+                    </fieldset>
+                    <fieldset class="ui-field-contain">
+                        <label for="uplandClayey"><span class="label label-legend">Upland Clayey</span></label>
+                        <div class="wrapper">
+                            <input type="text" name="uplandClayey" id="uplandClayey" value="0" placeholder="a non-negative value"
+                                   class="inputalign" />
+                            <button id="ar3" class="resetbutton">Reset</button>
+                        </div>
+                        <div id="uplandClayey-error-msg" class="error-msg not-displayed">
+                        </div>
+                    </fieldset>
+                    <fieldset class="ui-field-contain">
+                        <label for="uplandShallow"><span class="label label-legend">Upland Shallow</span></label>
+                        <div class="wrapper">
+                            <input type="text" name="uplandShallow" id="uplandShallow" value="0" placeholder="a non-negative value"
+                                   class="inputalign" />
+                            <button id="ar4" class="resetbutton">Reset</button>
+                        </div>
+                        <div id="uplandShallow-error-msg" class="error-msg not-displayed">
+                        </div>
+                    </fieldset>
+                    <fieldset class="ui-field-contain">
+                        <label for="uplandVShallow"><span class="label label-legend">Upland Very shallow/Thin claypan</span></label>
+                        <div class="wrapper">
+                            <input type="text" name="uplandVShallow" id="uplandVShallow" value="0" placeholder="a non-negative value"
+                                   class="inputalign" />
+                            <button id="ar5" class="resetbutton">Reset</button>
+                        </div>
+                        <div id="uplandVShallow-error-msg" class="error-msg not-displayed">
+                        </div>
+                    </fieldset>
+                    <fieldset class="ui-field-contain">
+                        <label for="lowlandOverflow"><span class="label label-legend">Lowland Overflow</span></label>
+                        <div class="wrapper">
+                            <input type="text" name="lowlandOverflow" id="lowlandOverflow" value="0" placeholder="a non-negative value"
+                                   class="inputalign" />
+                            <button id="ar6" class="resetbutton">Reset</button>
+                        </div>
+                        <div id="lowlandOverflow-error-msg" class="error-msg not-displayed">
+                        </div>
+                    </fieldset>
+                    <fieldset class="ui-field-contain">
+                        <label for="lowlandWetmeadow"><span class="label label-legend">Lowland Wet meadow</span></label>
+                        <div class="wrapper">
+                            <input type="text" name="lowlandWetmeadow" id="lowlandWetmeadow" value="0" placeholder="a non-negative value"
+                                   class="inputalign" />
+                            <button id="ar7" class="resetbutton">Reset</button>
+                        </div>
+                        <div id="lowlandWetmeadow-error-msg" class="error-msg not-displayed">
+                        </div>
+                    </fieldset>
+                </div>
+                <fieldset class="ui-field-contain">
+                    <label for="totalAcres"><span class="label label-legend">Total Acres (tap to update)</span></label>
+                    <input type="text" name="totalAcres" id="totalAcres" value="0"
+                           style="text-align:center; font-weight:bold;" />
+                </fieldset>
+            </div>
+
+            <div data-role="navbar" class="border-top">
+                <ul>
+                    <li><a href="#CarryingCapacityPageTwo" data-icon="arrow-l" data-transition="flip"><span class="font-size-large text-bold">Back</span></a></li>
+                    <li><a href="" data-icon="arrow-r" id="CarryingCapacityOne_Forward" data-transition="flip"><span class="font-size-large text-bold">Forward</span></a></li>
+                </ul>
+            </div>
+
+        </div>
+
+    </div>
+
+    <div data-role="page" id="MapPage">
+        <div class="image-wrap">
+            <a href="#CarryingCapacityPageOne" class="ui-btn ui-icon-delete ui-btn-icon-notext corner-button">Close</a>
+            <img id="map" src="images/map2.jpeg" alt="ND region map" style="width:100%;">
+        </div>
+    </div>
+
+
+    <div data-role="page" id="CarryingCapacityPageTwo">
+        <div data-role="header" data-position="fixed" class="ui-header-fixed ui-header-fullscreen">
+            <a href="#HomePage" data-transition="pop" class="ui-btn ui-corner-all ui-shadow ui-icon-home ui-btn-icon-left"><span style="color:indigo;font-weight:bold;font-size:15px;">Home</span></a>
+            <h1 class="white-bold-font">Carrying Capacity Calculation</h1>
+        </div>
+
+        <div data-role="main" class="non-homepage-margin">
+            <div>
+                <fieldset class="ui-field-contain" data-role="controlgroup" data-type="vertical">
+                    <legend><span class="label label-legend">Pasture Type</span></legend>
+                    <label for="rangeland">Rangeland</label>
+                    <input type="radio" name="PastureType" id="rangeland" value="rangeland" checked="checked">
+                    <label for="tamegrass">Tame Grass</label>
+                    <input type="radio" name="PastureType" id="tamegrass" value="tamegrass">
+                    <label for="rowcrops">Row Crops</label>
+                    <input type="radio" name="PastureType" id="rowcrops" value="rowcrops">
+                    <label for="smallgrains">Small Grains, Solid-seeded (Broadcast) Crops and Cover Crop Mixtures</label>
+                    <input type="radio" name="PastureType" id="smallgrains" value="smallgrains">
+                </fieldset>
+            </div>
+
+            <div id="SelectCapacityMethod" class="border-top">
+                <fieldset class="ui-field-contain" data-role="controlgroup" data-type="vertical">
+                    <legend><span class="label label-legend">Carrying Capacity Calculation Method</span></legend>
+                    <label for="usingAum">Using estimated AUMs/ac stocking rates</label>
+                    <input type="radio" name="CapacityMethod" id="usingAum" value="usingAum" checked="checked">
+                    <label for="usingProduction">Using relative production values</label>
+                    <input type="radio" name="CapacityMethod" id="usingProduction" value="usingProduction">
+                </fieldset>
+            </div>
+
+            <div id="estimatedOrActualProduction" class="border-top not-displayed">
+                <fieldset class="ui-field-contain" data-role="controlgroup" data-type="vertical">
+                    <legend><span class="label label-legend">Relative Forage Production Value Type</span></legend>
+                    <label for="estimated">Estimated values (default values)</label>
+                    <input type="radio" name="estimatedOrActual" id="estimated" value="estimated" checked="checked">
+                    <label for="actual">Actual Values (custom values)</label>
+                    <input type="radio" name="estimatedOrActual" id="actual" value="actual">
+                </fieldset>
+            </div>
+
+            <div id="actualProductionDiv" class="border-top not-displayed">
+                <h4>
+                    Please input the actual relative forage production value for each combination of site type and vegetation type below.
+                    Values below initially come from the Forage Production Calculator results. You can keep them or input new values.
+                </h4>
+                <div data-role="collapsible" data-collapsed="false">
+                    <h2>Actual Relative Forage Production Value (lb/ac)</h2>
+                    <fieldset class="ui-field-contain">
+                        <label for="uplandLoamy2"><span class="label label-legend">Upland Loamy</span></label>
+                        <div class="wrapper">
+                            <input type="text" name="uplandLoamy2" id="uplandLoamy2" value="0" placeholder="a non-negative value"
+                                   class="inputalign" />
+                            <button id="fpr1" class="resetbutton">Reset</button>
+                        </div>
+                        <div id="uplandLoamy2-error-msg" class="error-msg not-displayed">
+                        </div>
+                    </fieldset>
+                    <fieldset class="ui-field-contain">
+                        <label for="uplandSandy2"><span class="label label-legend">Upland Sandy</span></label>
+                        <div class="wrapper">
+                            <input type="text" name="uplandSandy2" id="uplandSandy2" value="0" placeholder="a non-negative value"
+                                   class="inputalign" />
+                            <button id="fpr2" class="resetbutton">Reset</button>
+                        </div>
+                        <div id="uplandSandy2-error-msg" class="error-msg not-displayed">
+                        </div>
+                    </fieldset>
+                    <fieldset class="ui-field-contain">
+                        <label for="uplandClayey2"><span class="label label-legend">Upland Clayey</span></label>
+                        <div class="wrapper">
+                            <input type="text" name="uplandClayey2" id="uplandClayey2" value="0" placeholder="a non-negative value"
+                                   class="inputalign" />
+                            <button id="fpr3" class="resetbutton">Reset</button>
+                        </div>
+                        <div id="uplandClayey2-error-msg" class="error-msg not-displayed">
+                        </div>
+                    </fieldset>
+                    <fieldset class="ui-field-contain">
+                        <label for="uplandShallow2"><span class="label label-legend">Upland Shallow</span></label>
+                        <div class="wrapper">
+                            <input type="text" name="uplandShallow2" id="uplandShallow2" value="0" placeholder="a non-negative value"
+                                   class="inputalign" />
+                            <button id="fpr4" class="resetbutton">Reset</button>
+                        </div>
+                        <div id="uplandShallow2-error-msg" class="error-msg not-displayed">
+                        </div>
+                    </fieldset>
+                    <fieldset class="ui-field-contain">
+                        <label for="uplandVShallow2"><span class="label label-legend">Upland Very shallow/Thin claypan</span></label>
+                        <div class="wrapper">
+                            <input type="text" name="uplandVShallow2" id="uplandVShallow2" value="0" placeholder="a non-negative value"
+                                   class="inputalign" />
+                            <button id="fpr5" class="resetbutton">Reset</button>
+                        </div>
+                        <div id="uplandVShallow2-error-msg" class="error-msg not-displayed">
+                        </div>
+                    </fieldset>
+                    <fieldset class="ui-field-contain">
+                        <label for="lowlandOverflow2"><span class="label label-legend">Lowland Overflow</span></label>
+                        <div class="wrapper">
+                            <input type="text" name="lowlandOverflow2" id="lowlandOverflow2" value="0" placeholder="a non-negative value"
+                                   class="inputalign" />
+                            <button id="fpr6" class="resetbutton">Reset</button>
+                        </div>
+                        <div id="lowlandOverflow2-error-msg" class="error-msg not-displayed">
+                        </div>
+                    </fieldset>
+                    <fieldset class="ui-field-contain">
+                        <label for="lowlandWetmeadow2"><span class="label label-legend">Lowland Wet meadow</span></label>
+                        <div class="wrapper">
+                            <input type="text" name="lowlandWetmeadow2" id="lowlandWetmeadow2" value="0" placeholder="a non-negative value"
+                                   class="inputalign" />
+                            <button id="fpr7" class="resetbutton">Reset</button>
+                        </div>
+                        <div id="lowlandWetmeadow2-error-msg" class="error-msg not-displayed">
+                        </div>
+                    </fieldset>
+                </div>
+            </div>
+
+            <div id="NonRangelandSection">
+                <div class="border-top">
+                    <fieldset class="ui-field-contain">
+                        <label for="ActualProductionInput"><span class="label label-legend">Forage Production (lb/ac) </span></label>
+                        <h4>The forage production value below initially comes from the Forage Production Calculator result. You can keep it or input a new one.</h4>
+                        <input type="text" name="ActualProductionInput" id="ActualProductionInput" value="0" data-clear-btn="true" placeholder="a non-negative value"
+                               class="resultinputalign" />
+                    </fieldset>
+                </div>
+                <div class="border-top">
+                    <fieldset class="ui-field-contain">
+                        <label for="TotalAcresNonRangelandInput"><span class="label label-legend">Total Acres</span></label>
+                        <h4>Input your total acres below.</h4>
+                        <input type="text" name="TotalAcresNonRangelandInput" id="TotalAcresNonRangelandInput" value="0" data-clear-btn="true" placeholder="a non-negative value"
+                               class="resultinputalign" />
+                    </fieldset>
+                </div>
+            </div>
+
+            <div class="border-top">
+                <fieldset class="ui-field-contain">
+                    <label id="harvestEfficiencyLabel" for="HarvestEfficiency"><span class="label label-legend">Harvest Efficiency (%)*</span></label>
+                    <select name="HarvestEfficiency" id="HarvestEfficiency" class="ui-select"></select>
+                </fieldset>
+            </div>
+
+            <div class="border-top">
+                <fieldset class="ui-field-contain">
+                    <label for="aaue"><span class="label label-legend">AUE (average AUE, optional, value varies between 0 and 1)</span></label>
+                    <input type="text" name="aaue" id="aaue" value="" data-clear-btn="true" placeholder="a non-negative value"
+                           style="text-align:center; font-weight:bold;" />
+                </fieldset>
+            </div>
+
+            <div data-role="navbar" class="border-top">
+                <ul>
+                    <li><a href="#HomePage" data-icon="home" data-transition="flip"><span class="font-size-large text-bold">Home</span></a></li>
+                    <li><a href="#" data-icon="arrow-r" id="CarryingCapacityTwo_Forward" data-transition="flip"><span class="font-size-large text-bold">Forward</span></a></li>
+                </ul>
+            </div>
+        </div>
+
+    </div>
+
+
+
+    <div data-role="page" id="CarryingCapacityResultPage">
+        <div data-role="header" data-position="fixed" class="ui-header-fixed ui-header-fullscreen">
+            <a href="#HomePage" data-transition="pop" class="ui-btn ui-corner-all ui-shadow ui-icon-home ui-btn-icon-left"><span style="color:indigo;font-weight:bold;font-size:15px;">Home</span></a>
+            <h1 class="white-bold-font">Carrying Capacity Result</h1>
+        </div>
+
+        <div data-role="main" class="non-homepage-margin">
+
+            <div id="div110">
+                <div>
+                    <h4 id="TAUMs110" class="text-center label label-legend">Total AUMs*</h4>
+                    <input type="text" name="Plan110_TotalAums" id="Plan110_TotalAums" class="result-text" style="text-align: center;" value="" />
+                </div>
+                <div>
+                    <h4 id="TAAUMs110" class="text-center label label-legend">Total Available AUMs*</h4>
+                    <input type="text" name="Plan110_TotalAvAums" id="Plan110_TotalAvAums" class="result-text" style="text-align: center;" value="" />
+                </div>
+                <div class="ui-grid-a">
+                    <div class="ui-block-a">
+                        <h4 id="AumAc110" class="text-center label label-legend">AUM/ac*</h4>
+                        <input type="text" name="Plan110_AumAc" id="Plan110_AumAc" class="result-text" style="text-align: center;" value="" />
+                    </div>
+                    <div class="ui-block-b">
+                        <h4 id="AcAum110" class="text-center label label-legend">ac/AUM*</h4>
+                        <input type="text" name="Plan110_AcAum" id="Plan110_AcAum" class="result-text" style="text-align: center;" value="" />
+                    </div>
+                </div>
+                <div class="ui-grid-a">
+                    <div class="ui-block-a">
+                        <h4 id="AuemAc110" class="text-center label label-legend">AUEM/ac*</h4>
+                        <input type="text" name="Plan110_AuemAc" id="Plan110_AuemAc" class="result-text" style="text-align: center;" value="" />
+                    </div>
+                    <div class="ui-block-b">
+                        <h4 id="AcAuem110" class="text-center label label-legend">ac/AUEM*</h4>
+                        <input type="text" name="Plan110_AcAuem" id="Plan110_AcAuem" class="result-text" style="text-align: center;" value="" />
+                    </div>
+                </div>
+            </div>
+            <div id="div1222">
+                <div>
+                    <h4 id="TP1222" class="text-center label label-legend">Total Production (lbs)*</h4>
+                    <input type="text" name="Plan1222_TotalProduction" id="Plan1222_TotalProduction" class="result-text" style="text-align: center;" value="" />
+                </div>
+                <div>
+                    <h4 id="TF1222" class="text-center label label-legend">Total Available Forage (lbs)*</h4>
+                    <input type="text" name="Plan1222_TotalForage" id="Plan1222_TotalForage" class="result-text" style="text-align: center;" value="" />
+                </div>
+                <div>
+                    <h4 id="TAUMs1222" class="text-center label label-legend">Total AUMs*</h4>
+                    <input type="text" name="Plan1222_TotalAums" id="Plan1222_TotalAums" class="result-text" style="text-align: center;" value="" />
+                </div>
+                <div class="ui-grid-a">
+                    <div class="ui-block-a">
+                        <h4 id="AumAc1222" class="text-center label label-legend">AUM/ac*</h4>
+                        <input type="text" name="Plan1222_AumAc" id="Plan1222_AumAc" class="result-text" style="text-align: center;" value="" />
+                    </div>
+                    <div class="ui-block-b">
+                        <h4 id="AcAum1222" class="text-center label label-legend">ac/AUM*</h4>
+                        <input type="text" name="Plan1222_AcAum" id="Plan1222_AcAum" class="result-text" style="text-align: center;" value="" />
+                    </div>
+                </div>
+                <div class="ui-grid-a">
+                    <div class="ui-block-a">
+                        <h4 id="AuemAc1222" class="text-center label label-legend">AUEM/ac*</h4>
+                        <input type="text" name="Plan1222_AuemAc" id="Plan1222_AuemAc" class="result-text" style="text-align: center;" value="" />
+                    </div>
+                    <div class="ui-block-b">
+                        <h4 id="AcAuem1222" class="text-center label label-legend">ac/AUEM*</h4>
+                        <input type="text" name="Plan1222_AcAuem" id="Plan1222_AcAuem" class="result-text" style="text-align: center;" value="" />
+                    </div>
+                </div>
+            </div>
+
+            <br />
+            <div>
+                <h3 class="text-center label label-legend">Total AUMs <br /><span style="color:#808080; font-size:small;">(from Stocking Rate Calculator)</span></h3>
+                <input type="text" name="Total_AUM_c" id="Total_AUM_c" class="result-text" style="text-align: center;" value="" />
+            </div>
+
+
+            <br />
+            <div data-role="navbar" class="border-top">
+                <ul>
+                    <li><a href="#" data-icon="arrow-l" id="CarryingCapacityResultPage_Back" data-transition="slidedown"><span class="font-size-large text-bold">Back</span></a></li>
+                    <li><a href="#HomePage" data-icon="home" id="HomeBtn" data-transition="flip"><span class="font-size-large text-bold">Home</span></a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+
+
+</body>
+</html>

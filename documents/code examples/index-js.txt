@@ -1,0 +1,1352 @@
+// For an introduction to the Blank template, see the following documentation:
+// http://go.microsoft.com/fwlink/?LinkID=397704
+// To debug code on page load in Ripple or on Android devices/emulators: launch your app, set breakpoints, 
+// and then run "window.location.reload()" in the JavaScript Console.
+(function () {
+    "use strict";
+
+    document.addEventListener('deviceready', onDeviceReady.bind(this), false);
+
+    //// common or predefined variables
+    var siteList = ['uplandLoamy', 'uplandSandy', 'uplandClayey', 'uplandShallow', 'uplandVShallow', 'lowlandOverflow', 'lowlandWetmeadow'];
+
+    // animal classes list
+    var ACL = [
+        "1,000-lb. cow, dry",
+        "1,000-lb. cow, with calf",
+        "1,100-lb. cow, with calf",
+        "1,200-lb. cow, with calf",
+        "1,300-lb. cow, with calf",
+        "1,400-lb. cow, with calf",
+        "1,500-lb. cow, with calf",
+        "Cattle bull, mature",
+        "Weaned calves to yearling",
+        "Yearling cattle (600-800 lb.)",
+        "Two-year-old cattle (800-1,000 lb.)",
+        "Bison cow, mature",
+        "Bison bull, mature",
+        "Horse, mature",
+        "Sheep, dry ewe",
+        "Sheep, mature with lamb",
+        "Sheep ram",
+        "Goat, mature",
+        "Deer, white-tailed, mature",
+        "Deer, mule, mature",
+        "Elk, mature",
+        "Antelope, mature",
+        "Sheep, bighorn, mature",
+        "Jackrabbit, white-tailed",
+        "Prairie dog"
+    ];
+
+
+
+    // animal unit equivalent (AUE)
+    var AUE = [
+        0.92, // 1,000-lb. cow, dry
+        1.00, // 1,000-lb. cow, with calf
+        1.07, // 1,100-lb. cow, with calf
+        1.15, // 1,200-lb. cow, with calf
+        1.22, // 1,300-lb. cow, with calf
+        1.29, // 1,400-lb. cow, with calf
+        1.35, // 1,500-lb. cow, with calf
+        1.40, // Cattle bull, mature
+        0.60, // Weaned calves to yearling
+        0.70, // Yearling cattle (600-800 lb.)
+        0.90, // Two-year-old cattle (800-1,000 lb.)
+        1.00, // Bison cow, mature
+        1.50, // Bison bull, mature
+        1.25, // Horse, mature
+        0.15, // Sheep, dry
+        0.20, // Sheep, mature with lamb
+        0.25, // Sheep ram
+        0.15, // Goat, mature
+        0.15, // Deer, white-tailed, mature
+        0.20, // Deer, mule, mature
+        0.60, // Elk, mature
+        0.20, // Antelope, mature
+        0.20, // Sheep, bighorn, mature
+        0.02, // Jackrabbit, white-tailed
+        0.004 // Prairie dog
+    ];
+
+    //Estimated stocking rate guide in animal
+    //unit months per acre (AUM/ac) by site and multiple
+    //land resource areas (MLRA) for the reference plant
+    //community associated with each vegetation
+    //type/ecological site (modified from Sedivec and
+    //Printz (2012) 每 Ecological Sites of North Dakota).
+    //(Use for rangeland pastures only.)
+    var EstimatedAumAc = [
+        [0.66, 0.68, 0.63, 0.60, 0.30, 0.96, 1.23],
+        [0.66, 0.66, 0.57, 0.38, 0.24, 0.87, 1.16],
+        [0.71, 0.77, 0.66, 0.52, 0.37, 1.01, 1.28],
+        [0.85, 0.85, 0.82, 0.60, 0.43, 1.15, 1.37],
+        [0.57, 0.55, 0.52, 0.36, 0.22, 0.57, 0.92]
+    ];
+
+    //Estimated stocking rate guide using relative
+    //production values (RPV; lb/ac) and multiple land
+    //resource areas (MLRA) for reference plant communities
+    //associated with each vegetation type/ecological site
+    //(modified from USDA (2014) relative forage production
+    //values by ecological sites).
+    //(Use for both rangeland and tame grass pastures.)
+    var DefaultRelativeProductionValues = [
+        [2400, 2500, 2300, 2200, 1100, 3500, 4500],
+        [2400, 2400, 2100, 1330, 800, 3200, 4250],
+        [2800, 2800, 2600, 2100, 1350, 3800, 4600],
+        [2850, 2850, 2700, 2150, 1050, 3800, 4500],
+        [2100, 2000, 1900, 1300, 800, 2650, 4000]
+    ];
+
+    var SiteType = ["Upland", "Upland", "Upland", "Upland", "Upland", "Lowland", "Lowland"];
+    var VegetationType = ["Loamy", "Sandy", "Clayey", "Shallow", "Very shallow/Thin claypan", "Overflow", "Wetmeadow"];
+
+    var MapZones = ["53A&B", "54", "55A&B", "56", "58C&D"];
+    var SiteVegeTypeCount = 7;
+
+    var animalClassIndices = [0], animalClasses = [''], headNumbers = [1], monthNumbers = [1],
+        defaultAumAc = [0.66, 0.68, 0.63, 0.60, 0.30, 0.96, 1.23], defaultProductionValue = [2400, 2500, 2300, 2200, 1100, 3500, 4500],
+        aues = [1], aus = [1], aums = [1], totalAums = 0, averageAue = 1, animalClassQuantity = 1, mapZoneIndex = 0,
+        acres = [0, 0, 0, 0, 0, 0, 0], totalAcres = 0, actualProductionValues = [0, 0, 0, 0, 0, 0, 0],
+            worksheetB_totalAums = 0, worksheetB_totalAvailableAums = 0, worksheetB_aumAc = 0, worksheetB_acAum = 0,
+            worksheetB_auemAc = 0, worksheetB_acAuem = 0,
+            worksheetC_totalProduction = 0, worksheetC_totalAvailableForage = 0, worksheetC_totalAums = 0,
+            worksheetC_aumAc = 0, worksheetC_acAum = 0,
+            worksheetC_auemAc = 0, worksheetC_acAuem = 0,
+            harvestEfficiency = 25,
+            conversionRates = [50, 8.92, 10],
+            rowcropsNumberPlots = 3,
+            smallGrainsNumberPlots = 5,
+            PercentAirDryMatter = [
+             // before heading, headed, seed ripe, leaves dry, dormancy
+                [0.35, 0.45, 0.60, 0.85, 0.95], // wheatgrasses, needlegrasses, perennial bromes, bluegrasses, fescues
+                [0.30, 0.45, 0.60, 0.85, 0.95], // Tall: bluesems, switchgrass
+                [0.40, 0.55, 0.65, 0.90, 0.95], // Mid: side-oats grama
+                [0.45, 0.60, 0.80, 0.90, 0.95], // Short: blue grama, buffalograss
+                [0.20, 0.40, 0.60, 0.90, 1.0], // Forbs
+                [0.35, 0.50, 0.30, 0.85, 1.0] // Shrubs
+            ];
+    var RangePastureForageResultArr = [], RangePastureFieldTypeIndex = [], NonRangePastureForageResult = 0;
+
+    ////////////////////////////////////////////////////////////////
+    //   main function
+
+    function onDeviceReady() {
+        // Handle the Cordova pause and resume events
+        document.addEventListener('pause', onPause.bind(this), false);
+        document.addEventListener('resume', onResume.bind(this), false);
+
+        //// Dynamically show the current year in the footer copyright
+        //$(".dynamic-year").text((new Date()).getFullYear());
+
+        // add home page background color and footer background color
+        //$("#HomePage").css("background-color","darkgreen");
+        //$('[data-role="footer"]').css("background-color", "cornsilk");
+
+        $("#HomePage").css("background", "url(images/grass.jpg)");
+
+        $('[data-role="header"]').css("background-color", "darkorange");
+
+        // open document pdf file in a new window
+        //ViewPdf("viewdocument", "https://www.ag.ndsu.edu/publications/livestock/determining-carrying-capacity-and-stocking-rates-for-range-and-pasture-in-north-dakota/r1810.pdf");
+        //OpenPdf("viewdocument", "images/MainDoc.pdf");
+
+        // two versions to open a pdf file, one android and one ios
+        DisplayPdfFile_SRCC();
+        DisplayPdfFile_FP();
+
+        // to make sure the big map is always fullscreen
+        $(window).on("orientationchange", function () {
+            if (window.orientation === 0) // Portrait
+            {
+                $("#map").attr("src", "images/map2.jpeg");
+            }
+            else // Landscape
+            {
+                $("#map").attr("src", "images/map.jpeg");
+            }
+        });
+
+        // add select options of animal classes in the dropdown list
+        AddOptions($("#ClassQuantity"), 1, 1, 25, 0);
+
+        // dynamically add html content for animal class selection, number of head input, and number of month input in a collapsible form
+        // based on specified number of animal classes
+        AddHtmlContentClassHeadMonth();
+
+        // same meaning as the method name specified
+        CheckStockingRatePageUserInput();
+
+        // set the result displaying area to be readonly
+        MakeDisplayingResultReadOnly();
+
+        // automatically add harvest efficiency options
+        AddOptions($("#HarvestEfficiency"), 25, 1, 40, 0);
+
+        OnPastureTypeSelectionChange();
+
+        CheckCarryingCapacityUserInputCollection();
+
+        OnAcresInputChange();
+
+        OnCarryingCapacityBtnClick();
+
+        OnCarryingCapacityPageOneForwardClick();
+
+        OnCarryingCapacityPageTwoForwardClick();
+
+        OnCarryingCapacityResultPageBackBtnClick();
+
+        OnForageProductionPageSelectionsChange();
+
+        CheckForageProductionSingleInputCollection();
+
+        GotoForageProductionResultPage();
+
+        ResetActionCollections();
+
+        //GeneratePdf();
+
+        DefinitionPopupCollections();
+
+    }
+
+
+
+
+
+
+
+
+
+
+    ////////////////////////////////////////////////////////////
+    //  subroutines
+
+    //// open and view pdf file from a web link when a link btn is clicked
+    //// This is for both Android and ios version
+    //function ViewPdf(linkBtnId, pdfLink) {
+    //    var fullLink = "https://docs.google.com/viewer?url=" + pdfLink + "&embedded=true";
+    //    document.getElementById(linkBtnId).addEventListener("click", function () {
+    //        window.open(fullLink, '_blank', 'location=no'); // open pdf with the plugin "inappbrowser" if use "_blank"
+    //    });
+    //}
+
+    // open and view pdf file from a web link when a link btn is clicked
+    //// This is for ios version
+    // function OpenPdf(linkBtnId, pdfLink) {
+    //    document.getElementById(linkBtnId).addEventListener("click", function () {
+    //        //window.open(pdfLink, '_system', 'location=no'); // open pdf with the plugin "inappbrowser" if use "_blank"
+    //        window.open(pdfLink, '_blank', 'location=no');
+    //    });
+    //}
+
+
+
+    // dynamically add select control (drop list) options
+    function AddOptions(selectControl, startValue, increment, endValue, precision) {
+        var optTemp, v;
+        var len = Math.floor((endValue - startValue) / increment) + 1;
+        for (var i = 0; i < len; i++) {
+            v = startValue + i * increment;
+            v = Number(v).toFixed(precision);
+            optTemp = "<option value= i>" + v + "</option>";
+            selectControl.append(optTemp);
+        }
+        //var h = Math.floor(len / 2);
+        //var optionSelected = $($("option", selectControl).get(h));
+        //optionSelected.attr('selected', 'selected');
+        selectControl.selectmenu();
+        selectControl.selectmenu('refresh', true);
+    }
+
+
+    function GetMapzoneIndex() {
+        return parseInt($("#MLRA").prop("selectedIndex"));
+    }
+
+    // 
+    function GetAnimalClassQuantity() {
+        return parseInt($("#ClassQuantity").prop("selectedIndex")) + 1;
+    }
+
+    function GetHarvestEfficiency() {
+        var si = parseInt($("#HarvestEfficiency").prop("selectedIndex"));
+        harvestEfficiency = si + 25;
+    }
+
+    // dynamically add html content for animal class selection, number of head input, and number of month input in a collapsible form
+    // based on specified number of animal classes
+    function AddHtmlContentClassHeadMonth() {
+        $("#ClassQuantity").change(function () {
+            var x = GetAnimalClassQuantity(), i, htmlContent = '';
+            $('#AnimalClassInput').html('');
+            $('#AnimalClassInput').collapsible().trigger('create'); // very important
+
+            for (i = 1; i <= x; i++) {
+                htmlContent += '<h3>Animal Class ' + i + '</h3>';
+                htmlContent += '<fieldset class="ui-field-contain">';
+                htmlContent += '<select name="' + 'ac' + i + '" ' + 'id="' + 'ac' + i + '" class="ui-select">';
+                htmlContent += '<option value="1">1,000-lb. cow, dry</option>' +
+                        '<option value="2">1,000-lb. cow, with calf</option>' +
+                           '<option value="3">1,100-lb. cow, with calf</option>' +
+                           '<option value="4">1,200-lb. cow, with calf</option>' +
+                           '<option value="5">1,300-lb. cow, with calf</option>' +
+                           '<option value="6">1,400-lb. cow, with calf</option>' +
+                           '<option value="7">1,500-lb. cow, with calf</option>' +
+                           '<option value="8">Cattle bull, mature</option>' +
+                           '<option value="9">Weaned calves to yearling</option>' +
+                           '<option value="10">Yearling cattle (600-800 lb.)</option>' +
+                           '<option value="11">Two-year-old cattle (800-1,000 lb.)</option>' +
+                           '<option value="12">Bison cow, mature</option>' +
+                           '<option value="13">Bison bull, mature</option>' +
+                           '<option value="14">Horse, mature</option>' +
+                           '<option value="15">Sheep, dry ewe</option>' +
+                           '<option value="16">Sheep, mature with lamb</option>' +
+                           '<option value="17">Sheep ram</option>' +
+                           '<option value="18">Goat, mature</option>' +
+                           '<option value="19">Deer, white-tailed, mature</option>' +
+                           '<option value="20">Deer, mule, mature</option>' +
+                           '<option value="21">Elk, mature</option>' +
+                           '<option value="22">Antelope, mature</option>' +
+                           '<option value="23">Sheep, bighorn, mature</option>' +
+                           '<option value="24">Jackrabbit, white-tailed</option>' +
+                           '<option value="25">Prairie dog</option>';
+                htmlContent += '</select>';
+                htmlContent += '</fieldset>';
+                htmlContent += '<fieldset class="ui-field-contain">' +
+                          '<label for="hn' + i + '"><span class="label label-legend">Number of Head</span></label>' +
+                          '<input type="text" name="hn' + i + '" id="hn' + i + '" value="1" data-clear-btn="true" placeholder="a non-negative integer value"' +
+                          'style="text-align:center; font-weight:bold;" />' +
+                          '</fieldset>';
+
+                htmlContent += '<fieldset class="ui-field-contain">' +
+                       '<label for="mn' + i + '"><span class="label label-legend">Number of Months</span></label>' +
+                       '<input type="text" name="mn' + i + '" id="mn' + i + '" value="1" data-clear-btn="true" placeholder="a non-negative integer value"' +
+                              'style="text-align:center; font-weight:bold;" />' +
+                   '</fieldset>';
+                htmlContent += '<br />';
+                $('<div>').attr({ 'data-role': 'collapsible', 'id': 'a' + i, 'style': 'border-bottom-style:dotted; border-bottom-color:darkmagenta;' })
+                .html(htmlContent).appendTo('#AnimalClassInput');
+                htmlContent = '';
+            }
+
+            $('#AnimalClassInput').collapsible().trigger('create');
+        });
+    }
+
+    // on tapping or tapholding a label or button, pop up the corresponding definition
+    function DefinitionTapPopup(fullControl, actionStr, termDef) {
+        fullControl.on(actionStr, function () {
+            alert(termDef);
+        });
+    }
+
+    // collections of all definition popups
+    function DefinitionPopupCollections() {
+        var t1 = 'Average AUE refers to Average Animal Unit Equivalent you are grazing. \
+The standard animal unit is a 1,000-pound cow with a 6-month-old or younger calf by her side. \
+Different kinds and classes of livestock are assigned an AUE based on the amount of forage they will consume in a one month period.'
+        DefinitionTapPopup($('#AAueLabel'), 'tap', t1);
+
+        var t2 = 'This is your stocking rate. An animal unit month (AUM) is based on the age, \
+class and size of livestock, and the amount of forage they will consume in one month. \
+An AUM is a common way of expressing stocking rates and carrying capacity.';
+        DefinitionTapPopup($('#TAumLabel'), 'tap', t2);
+
+        var t3 = 'Stocking Rate is the number of specific kinds and classes of animals grazing or \
+using a unit of land for a specific time period. Stocking rate is typically expressed in animal unit months (AUMS).';
+        DefinitionTapPopup($('#stockingRateBtn'), 'taphold', t3);
+
+        var t4 = 'The amount of forage produced by a unit of land. It is typically expressed as pounds per acre and is used to estimate the actual carrying capacity of a unit of land.';
+        DefinitionTapPopup($('#forageProductionBtn'), 'taphold', t4);
+
+        var t5 = 'Carrying Capacity is a ※measurement§ (actual or estimated) of how much forage a unit \
+or piece of ground is able to produce on an average year. The carrying capacity is the maximum \
+stocking rate possible that is consistent with maintaining or improving forage and other vegetation and related \
+resources. It is expressed in animal unit months (AUMs).';
+        DefinitionTapPopup($('#carryingCapacityBtn'), 'taphold', t5);
+
+        var t6 = 'This is the amount of forage available for use by grazing animals while continuing to maintain proper use of the resource. \n\n \
+Recommended harvest efficiencies: \n\
+        - Native rangeland 每 25% \n\
+        - Pasture 每 30% \n\
+        - Cover crops full use 每 75% \n\
+        - Cover crops 50% use 每 35% ';
+        DefinitionTapPopup($('#harvestEfficiencyLabel'), 'tap', t6);
+
+        var t7 = 'This is your carrying capacity. An animal unit month (AUM) is based on the age, class and size of livestock, \
+and the amount of forage they will consume in one month. An AUM is a common way of expressing stocking rates and carrying capacity.';
+        DefinitionTapPopup($('#TAUMs110'), 'tap', t7);
+
+        var t8 = 'This is your carrying capacity. An animal unit month (AUM) is based on the age, class and size of livestock, \
+and the amount of forage they will consume in one month. An AUM is a common way of expressing stocking rates and carrying capacity.';
+        DefinitionTapPopup($('#TAAUMs110'), 'tap', t8);
+
+        var t9 = 'This is the number of AUMs you can graze per 1 acre based on the carrying capacity.';
+        DefinitionTapPopup($('#AumAc110'), 'tap', t9);
+
+        var t10 = 'This is the number of acres required to support 1 AUM based on the carrying capacity.';
+        DefinitionTapPopup($('#AcAum110'), 'tap', t10);
+
+        var t11 = 'This is the number of your animals you can graze per acre for 1 month based on the carrying capacity.';
+        DefinitionTapPopup($('#AuemAc110'), 'tap', t11);
+
+        var t12 = 'This is the number of acres needed to support one of your animals for 1 month based on the carrying capacity.';
+        DefinitionTapPopup($('#AcAuem110'), 'tap', t12);
+
+        var t13 = 'This is your carrying capacity. An animal unit month (AUM) is based on the age, class and size of livestock, \
+and the amount of forage they will consume in one month. An AUM is a common way of expressing stocking rates and carrying capacity.';
+        DefinitionTapPopup($('#TAUMs1222'), 'tap', t13);
+
+        var t14 = 'This is the number of AUMs you can graze per 1 acre based on the carrying capacity.';
+        DefinitionTapPopup($('#AumAc1222'), 'tap', t14);
+
+        var t15 = 'This is the number of acres required to support 1 AUM based on the carrying capacity.';
+        DefinitionTapPopup($('#AcAum1222'), 'tap', t15);
+
+        var t16 = 'This is the number of your animals you can graze per acre for 1 month based on the carrying capacity.';
+        DefinitionTapPopup($('#AuemAc1222'), 'tap', t16);
+
+        var t17 = 'This is the number of acres needed to support one of your animals for 1 month based on the carrying capacity.';
+        DefinitionTapPopup($('#AcAuem1222'), 'tap', t17);
+
+        var t18 = 'Total amount of forage produced by the grazing unit in pounds per acres.';
+        DefinitionTapPopup($('#TP1222'), 'tap', t18); // total production
+
+        var t19 = 'Total amount of forage available for livestock consumption produced by the grazing unit in pounds per acre.';
+        DefinitionTapPopup($('#TF1222'), 'tap', t19); // total available forage
+    }
+
+
+
+    // Reset value to default
+    function ResetToDefault(resetBtnFull, inputControlFull) {
+        resetBtnFull.click(function (e) {
+            $(inputControlFull).val(0);
+        });
+    }
+
+    // Reset acres input value to default
+    function ResetToDefaultAcres(resetBtnFull, inputControlFull) {
+        resetBtnFull.click(function (e) {
+            $(inputControlFull).val(0);
+            $('#totalAcres').val(AcresSum());
+        });
+    }
+
+
+    // reset to default action collections
+    function ResetActionCollections() {
+
+        ResetToDefault($('#rcsgResetBtn'), 'input[id=rcsgInput]');
+
+        // forage production section, range/pasture
+        ResetToDefault($('#rp_r1'), 'input[id=uplandLoamyBoth]');
+        ResetToDefault($('#rp_r2'), 'input[id=uplandSandyBoth]');
+        ResetToDefault($('#rp_r3'), 'input[id=uplandClayeyBoth]');
+        ResetToDefault($('#rp_r4'), 'input[id=uplandShallowBoth]');
+        ResetToDefault($('#rp_r5'), 'input[id=uplandVShallowBoth]');
+        ResetToDefault($('#rp_r6'), 'input[id=lowlandOverflowBoth]');
+        ResetToDefault($('#rp_r7'), 'input[id=lowlandWetmeadowBoth]');
+
+        // carrying capacity section, relative forage production user input
+        ResetToDefault($('#fpr1'), 'input[id=uplandLoamy2]');
+        ResetToDefault($('#fpr2'), 'input[id=uplandSandy2]');
+        ResetToDefault($('#fpr3'), 'input[id=uplandClayey2]');
+        ResetToDefault($('#fpr4'), 'input[id=uplandShallow2]');
+        ResetToDefault($('#fpr5'), 'input[id=uplandVShallow2]');
+        ResetToDefault($('#fpr6'), 'input[id=lowlandOverflow2]');
+        ResetToDefault($('#fpr7'), 'input[id=lowlandWetmeadow2]');
+
+        // carrying capacity section, acres user input
+        ResetToDefaultAcres($('#ar1'), 'input[id=uplandLoamy]');
+        ResetToDefaultAcres($('#ar2'), 'input[id=uplandSandy]');
+        ResetToDefaultAcres($('#ar3'), 'input[id=uplandClayey]');
+        ResetToDefaultAcres($('#ar4'), 'input[id=uplandShallow]');
+        ResetToDefaultAcres($('#ar5'), 'input[id=uplandVShallow]');
+        ResetToDefaultAcres($('#ar6'), 'input[id=lowlandOverflow]');
+        ResetToDefaultAcres($('#ar7'), 'input[id=lowlandWetmeadow]');
+    }
+
+
+    // 
+    function CheckStockingRatePageUserInput() {
+        $('#StockingRatePageOneForward').click(function (e) {
+            animalClassQuantity = GetAnimalClassQuantity();
+            var i, v, w, k = 0;
+            var acid, hnid, mnid, animalClassIndex, hn, mn, t;
+            for (i = 1; i <= animalClassQuantity; i++) {
+                hnid = '#hn' + i;
+                mnid = '#mn' + i;
+                v = $(hnid).val();
+                w = $(mnid).val();
+                if ((!(Math.floor(v) == v && $.isNumeric(v) && v > 0)) || (!($.isNumeric(w) && w > 0))) {
+                    alert('Invalid input in Animal Class ' + i);
+                    k++;
+                }
+            }
+            if (k === 0) {
+                animalClassIndices.length = 0;
+                headNumbers.length = 0;
+                animalClasses.length = 0;
+                monthNumbers.length = 0;
+                aues.length = 0;
+                aus.length = 0;
+                aums.length = 0;
+                totalAums = 0;
+                t = 0;
+
+                // save all user selections or inputs to global variables
+                for (i = 1; i <= animalClassQuantity; i++) {
+                    acid = '#ac' + i;
+                    hnid = '#hn' + i;
+                    mnid = '#mn' + i;
+                    animalClassIndex = parseInt($(acid).prop("selectedIndex"));
+                    animalClassIndices[i - 1] = animalClassIndex;
+                    animalClasses[i - 1] = ACL[animalClassIndex];
+                    hn = $("#hn" + i).val();
+                    headNumbers[i - 1] = hn;
+                    mn = $("#mn" + i).val();
+                    monthNumbers[i - 1] = mn;
+                    aues[i - 1] = AUE[animalClassIndex];
+                    aus[i - 1] = hn * aues[i - 1];
+                    aums[i - 1] = aus[i - 1] * mn;
+                    totalAums += aums[i - 1];
+                    t += aues[i - 1] * aums[i - 1];
+                }
+                averageAue = t / totalAums;
+
+                // display results
+                $('input[id=Average_AUE]').val("" + averageAue.toFixed(2));
+                $('input[id=Total_AUM]').val("" + totalAums.toFixed(2));
+
+                // navigate to the stocking rate calculation result page
+                $(":mobile-pagecontainer").pagecontainer("change", $("#StockingRateResultPage"));
+            }
+        });
+    }
+
+
+    // show different user interface based on whether dry or wet weight method is selected
+    // both statically and dynamically
+    function OnForageProductionPageSelectionsChange() {
+        FieldTypeSelectChange();
+        $("input[name='FieldTypeSelect']").on("change", function () {
+            FieldTypeSelectChange();
+        });
+    }
+
+    // forage production section
+    // on field or pasture type selection change
+    // show or hide different divisions
+    function FieldTypeSelectChange() {
+        if ($("input[name='FieldTypeSelect']:checked").val() === 'ft_rp') { // Rangeland
+            $("#RangePastureWeightInputDiv").show();
+            $("#DryOrWetWeightMethodDiv").show();
+            $("#RcSgInputDiv").hide();
+
+            DryWetSelectChange();
+            $("input[name='WeightMethodSelect']").on("change", function () {
+                DryWetSelectChange();
+            });
+        }
+        else if ($("input[name='FieldTypeSelect']:checked").val() === 'ft_tg') { // tame grass
+            $("#RangePastureWeightInputDiv").hide();
+            $("#DryOrWetWeightMethodDiv").show();
+            $("#RcSgInputDiv").show();
+
+            $('#recommendationNumberLabel').text('Recommended Sample Number: 5');
+
+            DryWetSelectChange();
+            $("input[name='WeightMethodSelect']").on("change", function () {
+                DryWetSelectChange();
+            });
+        }
+        else { // Row Crops or small grains and other crops
+            $("#RangePastureWeightInputDiv").hide();
+            $("#DryOrWetWeightMethodDiv").hide();
+            $("#RcSgInputDiv").show();
+            $("#PlantAndStageSelectDiv").hide();
+
+            if ($("input[name='FieldTypeSelect']:checked").val() === 'ft_rc') {
+                $('#recommendationNumberLabel').text('Recommended Sample Number: 3');
+            }
+            else {
+                $('#recommendationNumberLabel').text('Recommended Sample Number: 5');
+            }
+        }
+    }
+
+
+    //
+    function DryWetSelectChange() {
+        if ($("input[name='WeightMethodSelect']:checked").val() === 'DryWeight') {
+            $("#PlantAndStageSelectDiv").hide();
+        }
+        else {
+            $("#PlantAndStageSelectDiv").show();
+        }
+    }
+
+
+    // event of going from forage production first page to result page (second page)
+    // check input values and calculate result before go
+    function GotoForageProductionResultPage() {
+        $('#ForageProduction_Forward').click(function (e) {
+            var conversionRate, percentDryMatter;
+            var inputArr = [];
+            //var controlArrDry = [$('#uplandLoamyDry'), $('#uplandSandyDry'), $('#uplandClayeyDry'), $('#uplandShallowDry'), $('#uplandVShallowDry'), $('#lowlandOverflowDry'), $('#lowlandWetmeadowDry')];
+            //var controlArrWet = [$('#uplandLoamyWet'), $('#uplandSandyWet'), $('#uplandClayeyWet'), $('#uplandShallowWet'), $('#uplandVShallowWet'), $('#lowlandOverflowWet'), $('#lowlandWetmeadowWet')];
+            var controlArrBoth = [$('#uplandLoamyBoth'), $('#uplandSandyBoth'), $('#uplandClayeyBoth'), $('#uplandShallowBoth'), $('#uplandVShallowBoth'), $('#lowlandOverflowBoth'), $('#lowlandWetmeadowBoth')];
+
+
+            if ($("input[name='FieldTypeSelect']:checked").val() === 'ft_rp') {
+                conversionRate = conversionRates[0];
+                inputArr = GetRangePastureSampleWeightsInput(controlArrBoth);
+                if (inputArr.length === 0)
+                    alert('Please input at least one value!');
+                else {
+                    if ($("input[name='WeightMethodSelect']:checked").val() === 'DryWeight')
+                        percentDryMatter = 1;
+                    else
+                        percentDryMatter = GetPercentAirDryMatter();
+
+                    CalculateCheckRangePastureResultValidity(controlArrBoth, conversionRate, percentDryMatter);
+                }
+
+            }
+            else {// row crops; small grains, et ct; tame grass      //all dry case
+                percentDryMatter = 1;
+                inputArr = GetOneInputFieldMultipleInputs($('#rcsgInput'));
+                if ($("input[name='FieldTypeSelect']:checked").val() === 'ft_rc') // row crops
+                    conversionRate = conversionRates[1];
+                else if ($("input[name='FieldTypeSelect']:checked").val() === 'ft_sg') // small grains
+                    conversionRate = conversionRates[2];
+                else { // tame grass
+                    conversionRate = conversionRates[0];
+                    if ($("input[name='WeightMethodSelect']:checked").val() === 'DryWeight')
+                        percentDryMatter = 1;
+                    else
+                        percentDryMatter = GetPercentAirDryMatter();
+                }
+                CalculateCheckResultForNonRangePasture(inputArr, conversionRate, percentDryMatter);
+            }
+
+        });
+    }
+
+
+    // Based on users' selection, get the corresponding percentage of air dry matter
+    function GetPercentAirDryMatter() {
+        var dm, grassTypeIndex, growthStageIndex;
+        grassTypeIndex = parseInt($("#PlantTypeSelect").prop("selectedIndex"));
+        growthStageIndex = parseInt($("#GrowthStageSelect").prop("selectedIndex"));
+
+        dm = PercentAirDryMatter[grassTypeIndex][growthStageIndex];
+
+        return dm;
+    }
+
+
+    // Get multiple input weight values separated with comma from a single input field
+    // return empty array if the field is empty
+    // otherwise return an integer array
+    function GetOneInputFieldMultipleInputs(fullInputControl) {
+        var valu = fullInputControl.val();
+        if (valu == '')
+            return [];
+        else {
+            var arr = valu.split(',');
+            var intArr = [];
+            for (var i = 0; i < arr.length; i++) {
+                if ($.isNumeric(arr[i]) && (arr[i] >= 0))
+                    intArr.push(parseInt(arr[i]));
+                else {
+                    intArr = [NaN];
+                    break;
+                }
+            }
+            return intArr;
+        }
+    }
+
+    // controlArray is a list of input field controls for either dry weight or wet weight
+    // [$('#uplandLoamyDry'), $('#uplandSandyDry'), $('#uplandClayeyDry'), $('#uplandShallowDry'), $('#uplandVShallowDry'), $('#lowlandOverflowDry'), $('#lowlandWetmeadowDry')]
+    // [$('#uplandLoamyWet'), $('#uplandSandyWet'), $('#uplandClayeyWet'), $('#uplandShallowWet'), $('#uplandVShallowWet'), $('#lowlandOverflowWet'), $('#lowlandWetmeadowWet')]
+    function GetRangePastureSampleWeightsInput(controlArray) {
+        var arr = [], arrt = [];
+        for (var i = 0; i < controlArray.length; i++) {
+            arrt = GetOneInputFieldMultipleInputs(controlArray[i]);
+            arr = arr.concat(arrt);
+        }
+        arrt = null;
+        return arr;
+    }
+
+
+    // loop to calculate each of the field type result
+    // check if any result is NAN, if yes, pop up alert for the corresponding field type inputs, and break from the loop
+    // display corresponding result in corresponding box
+    function CalculateCheckRangePastureResultValidity(controlArr, conversionRate, percentDryMatter) {
+        var arrt, rst = NaN;
+        var resultControlIdArr = ['input[id=uplandLoamyFP]', 'input[id=uplandSandyFP]', 'input[id=uplandClayeyFP]', 'input[id=uplandShallowFP]', 'input[id=uplandVShallowFP]', 'input[id=lowlandOverflowFP]', 'input[id=lowlandWetmeadowFP]'];
+        var siteType = ['Upland Loamy', 'Upland Sandy', 'Upland Clayey', 'Upland Shallow', 'Upland Very Shallow/Thin claypan', 'Lowland Overflow', 'Lowland Wet meadow'];
+        RangePastureForageResultArr = [];
+        RangePastureFieldTypeIndex = [];
+
+        for (var i = 0; i < controlArr.length; i++) {
+            arrt = GetOneInputFieldMultipleInputs(controlArr[i]);
+
+            if (arrt.length === 0)
+                rst = NaN;
+            else
+                rst = GetFinalForageProduction(arrt, conversionRate, percentDryMatter);
+            if (isNaN(rst)) {
+                RangePastureForageResultArr = [];
+                RangePastureFieldTypeIndex = [];
+                alert('Your input for ' + siteType[i] + ' is invalid!');
+                // break from the loop
+                break;
+            }
+            $(resultControlIdArr[i]).val("" + rst.toFixed(1));
+            RangePastureForageResultArr.push(rst);
+            RangePastureFieldTypeIndex.push(i);
+        }
+
+        if (RangePastureForageResultArr.length > 0) {
+            // show or hide corresponding result divs
+            $('#NonRangePastureResultDiv').hide();
+            $('#RangePastureResultDiv').show();
+
+            // navigate to result page if all results are valid
+            $.mobile.navigate("#ForageProductionResultPage");
+        }
+    }
+
+    // calculate and display result for non range/pasture crops
+    function CalculateCheckResultForNonRangePasture(inputArray, conversionRate, percentDryMatter) {
+        NonRangePastureForageResult = 0;
+        var rst = NaN;
+        if (inputArray.length == 0)
+            alert('Please input at least one value!');
+        else {
+            rst = GetFinalForageProduction(inputArray, conversionRate, percentDryMatter);
+            if (!isNaN(rst)) {
+                // show or hide corresponding result divs
+                $('#NonRangePastureResultDiv').show();
+                $('#RangePastureResultDiv').hide();
+
+                $('input[id=ForageProductionResultOutput]').val("" + rst.toFixed(1));
+
+                NonRangePastureForageResult = rst;
+
+                $.mobile.navigate("#ForageProductionResultPage");
+            }
+            else
+                alert('Invalid input!');
+        }
+    }
+
+    // calculate the sum of an array
+    function GetSum(arr) {
+        return arr.reduce(function (a, b) { return a + b; });
+    }
+
+    // calculate the average value of an array
+    function GetAverage(arr) {
+        var avg = GetSum(arr) / arr.length;
+        return avg;
+    }
+
+    // calculate final forage production
+    function GetFinalForageProduction(arr, cr, pct) {
+        //pct = (typeof pct !== 'undefined') ? pct : 1;
+        return GetAverage(arr) * cr * pct;
+    }
+
+
+    // carrying capacity section
+    // on pasture type selection change
+    // show or hide different divs
+    function OnPastureTypeSelectionChange() {
+        $(document).on("pagecreate", "#CarryingCapacityPageTwo", function () {
+
+            $('#aaue').val(averageAue.toFixed(2));
+
+            if ($("input[name='PastureType']:checked").val() === 'rangeland') {
+                $("#NonRangelandSection").hide();
+
+                if ($("input[name='CapacityMethod']:checked").val() === 'usingAum') {
+                    $("#estimatedOrActualProduction").hide();
+                    $("#actualProductionDiv").hide();
+                }
+                else {
+                    $("#estimatedOrActualProduction").show();
+                }
+            }
+            else {
+                //$("#estimatedOrActualProduction").show();
+                $("#NonRangelandSection").show();
+            }
+
+            // on pasture type selection change
+            $("input[name='PastureType']").on("change", function () {
+                if ($("input[name='PastureType']:checked").val() === 'rangeland') {
+                    $("#NonRangelandSection").hide();
+                    $("#SelectCapacityMethod").show();
+                    if ($("input[name='CapacityMethod']:checked").val() === 'usingAum') {
+                        $("#estimatedOrActualProduction").hide();
+                        $("#actualProductionDiv").hide();
+                    }
+                    else {
+                        $("#estimatedOrActualProduction").show();
+                        if ($("input[name='estimatedOrActual']:checked").val() === 'estimated') {
+                            $("#actualProductionDiv").hide();
+                        }
+                        else {
+                            $("#actualProductionDiv").show();
+                        }
+                    }
+                }
+                else {
+                    $("#SelectCapacityMethod").hide();
+                    $("#actualProductionDiv").hide();
+                    $("#estimatedOrActualProduction").hide();
+                    $("#NonRangelandSection").show();
+                }
+            });
+
+            // on carrying capacity method selection change
+            $("input[name='CapacityMethod']").on("change", function () {
+                if ($("input[name='CapacityMethod']:checked").val() === 'usingAum') {
+                    $("#estimatedOrActualProduction").hide();
+                    $("#actualProductionDiv").hide();
+                }
+                else {
+                    $("#estimatedOrActualProduction").show();
+
+                    if ($("input[name='estimatedOrActual']:checked").val() === 'estimated') {
+                        $("#actualProductionDiv").hide();
+                    }
+                    else {
+                        $("#actualProductionDiv").show();
+                    }
+                }
+            });
+
+
+
+            // on relative forage production value type change
+            $("input[name='estimatedOrActual']").on("change", function () {
+                if ($("input[name='estimatedOrActual']:checked").val() === 'estimated') {
+                    $("#actualProductionDiv").hide();
+                }
+                else {
+                    $("#actualProductionDiv").show();
+                }
+            });
+
+        });
+    }
+
+
+    // collection of user input validation in carrying capacity section
+    function CheckCarryingCapacityUserInputCollection() {
+        // acre input check
+        CheckCarryingCapacityUserInput($("#CarryingCapacityOne_Forward"), $("#uplandLoamy"), $("#uplandLoamy-error-msg"));
+        CheckCarryingCapacityUserInput($("#CarryingCapacityOne_Forward"), $("#uplandSandy"), $("#uplandSandy-error-msg"));
+        CheckCarryingCapacityUserInput($("#CarryingCapacityOne_Forward"), $("#uplandClayey"), $("#uplandClayey-error-msg"));
+        CheckCarryingCapacityUserInput($("#CarryingCapacityOne_Forward"), $("#uplandShallow"), $("#uplandShallow-error-msg"));
+        CheckCarryingCapacityUserInput($("#CarryingCapacityOne_Forward"), $("#uplandVShallow"), $("#uplandVShallow-error-msg"));
+        CheckCarryingCapacityUserInput($("#CarryingCapacityOne_Forward"), $("#lowlandOverflow"), $("#lowlandOverflow-error-msg"));
+        CheckCarryingCapacityUserInput($("#CarryingCapacityOne_Forward"), $("#lowlandWetmeadow"), $("#lowlandWetmeadow-error-msg"));
+
+        // actual production value check
+        CheckCarryingCapacityUserInput($("#CarryingCapacityTwo_Forward"), $("#uplandLoamy2"), $("#uplandLoamy2-error-msg"));
+        CheckCarryingCapacityUserInput($("#CarryingCapacityTwo_Forward"), $("#uplandSandy2"), $("#uplandSandy2-error-msg"));
+        CheckCarryingCapacityUserInput($("#CarryingCapacityTwo_Forward"), $("#uplandClayey2"), $("#uplandClayey2-error-msg"));
+        CheckCarryingCapacityUserInput($("#CarryingCapacityTwo_Forward"), $("#uplandShallow2"), $("#uplandShallow2-error-msg"));
+        CheckCarryingCapacityUserInput($("#CarryingCapacityTwo_Forward"), $("#uplandVShallow2"), $("#uplandVShallow2-error-msg"));
+        CheckCarryingCapacityUserInput($("#CarryingCapacityTwo_Forward"), $("#lowlandOverflow2"), $("#lowlandOverflow2-error-msg"));
+        CheckCarryingCapacityUserInput($("#CarryingCapacityTwo_Forward"), $("#lowlandWetmeadow2"), $("#lowlandWetmeadow2-error-msg"));
+    }
+
+    // collection of single user value input checking in forage production section
+    function CheckForageProductionSingleInputCollection() {
+
+        CheckForageProductionDryrcUserInput($("#drc1"), $("#drc1-error-msg"));
+        CheckForageProductionDryrcUserInput($("#drc2"), $("#drc2-error-msg"));
+        CheckForageProductionDryrcUserInput($("#drc3"), $("#drc3-error-msg"));
+
+        CheckForageProductionWetrcUserInput($("#wrc1"), $("#wrc1-error-msg"));
+        CheckForageProductionWetrcUserInput($("#wrc2"), $("#wrc2-error-msg"));
+        CheckForageProductionWetrcUserInput($("#wrc3"), $("#wrc3-error-msg"));
+
+        CheckForageProductionDrysgUserInput($("#dsg1"), $("#dsg1-error-msg"));
+        CheckForageProductionDrysgUserInput($("#dsg2"), $("#dsg2-error-msg"));
+        CheckForageProductionDrysgUserInput($("#dsg3"), $("#dsg3-error-msg"));
+        CheckForageProductionDrysgUserInput($("#dsg4"), $("#dsg4-error-msg"));
+        CheckForageProductionDrysgUserInput($("#dsg5"), $("#dsg5-error-msg"));
+
+        CheckForageProductionWetsgUserInput($("#wsg1"), $("#wsg1-error-msg"));
+        CheckForageProductionWetsgUserInput($("#wsg2"), $("#wsg2-error-msg"));
+        CheckForageProductionWetsgUserInput($("#wsg3"), $("#wsg3-error-msg"));
+        CheckForageProductionWetsgUserInput($("#wsg4"), $("#wsg4-error-msg"));
+        CheckForageProductionWetsgUserInput($("#wsg5"), $("#wsg5-error-msg"));
+    }
+
+
+    // check if an user input value in dry weight row crops section is valid or not
+    // if not, display error message  
+    function CheckForageProductionDryrcUserInput(inputControl, errMsgDiv) {
+        $("#ForageProduction_Forward").click(function (e) {
+            if ($("input[name='WeightMethodSelect']:checked").val() === 'DryWeight') {
+                if ($("input[name='FieldTypeSelectDry']:checked").val() === 'Dry_rc') {
+
+                    var v = inputControl.val();
+                    if ($.isNumeric(v)) {
+                        if (v < 0) {
+                            DisplayErrMsg(e, errMsgDiv);
+                        }
+                        else {
+                            errMsgDiv.hide();
+                        }
+                    }
+                    else {
+                        DisplayErrMsg(e, errMsgDiv);
+                    }
+                }
+            }
+        });
+
+
+        inputControl.change(function () {
+            var v = inputControl.val();
+            if (!errMsgDiv.hidden && $.isNumeric(v)) {
+                if (v >= 0) {
+                    errMsgDiv.hide();
+                }
+            }
+        });
+    }
+
+
+    // check if an user input value in wet weight row crops section is valid or not
+    // if not, display error message 
+    function CheckForageProductionWetrcUserInput(inputControl, errMsgDiv) {
+        $("#ForageProduction_Forward").click(function (e) {
+            if ($("input[name='WeightMethodSelect']:checked").val() === 'WetWeight') {
+                if ($("input[name='FieldTypeSelectWet']:checked").val() === 'Wet_rc') {
+
+                    var v = inputControl.val();
+                    if ($.isNumeric(v)) {
+                        if (v < 0) {
+                            DisplayErrMsg(e, errMsgDiv);
+                        }
+                        else {
+                            errMsgDiv.hide();
+                        }
+                    }
+                    else {
+                        DisplayErrMsg(e, errMsgDiv);
+                    }
+                }
+            }
+        });
+
+
+        inputControl.change(function () {
+            var v = inputControl.val();
+            if (!errMsgDiv.hidden && $.isNumeric(v)) {
+                if (v >= 0) {
+                    errMsgDiv.hide();
+                }
+            }
+        });
+    }
+
+
+    // check if an user input value in dry weight small grains and other crops section is valid or not
+    // if not, display error message
+    function CheckForageProductionDrysgUserInput(inputControl, errMsgDiv) {
+        $("#ForageProduction_Forward").click(function (e) {
+            if ($("input[name='WeightMethodSelect']:checked").val() === 'DryWeight') {
+                if ($("input[name='FieldTypeSelectDry']:checked").val() === 'Dry_sg') {
+
+                    var v = inputControl.val();
+                    if ($.isNumeric(v)) {
+                        if (v < 0) {
+                            DisplayErrMsg(e, errMsgDiv);
+                        }
+                        else {
+                            errMsgDiv.hide();
+                        }
+                    }
+                    else {
+                        DisplayErrMsg(e, errMsgDiv);
+                    }
+                }
+            }
+        });
+
+
+        inputControl.change(function () {
+            var v = inputControl.val();
+            if (!errMsgDiv.hidden && $.isNumeric(v)) {
+                if (v >= 0) {
+                    errMsgDiv.hide();
+                }
+            }
+        });
+    }
+
+
+
+    // check if an user input value in wet weight small grains and other crops section is valid or not
+    // if not, display error message
+    function CheckForageProductionWetsgUserInput(inputControl, errMsgDiv) {
+        $("#ForageProduction_Forward").click(function (e) {
+            if ($("input[name='WeightMethodSelect']:checked").val() === 'WetWeight') {
+                if ($("input[name='FieldTypeSelectWet']:checked").val() === 'Wet_sg') {
+
+                    var v = inputControl.val();
+                    if ($.isNumeric(v)) {
+                        if (v < 0) {
+                            DisplayErrMsg(e, errMsgDiv);
+                        }
+                        else {
+                            errMsgDiv.hide();
+                        }
+                    }
+                    else {
+                        DisplayErrMsg(e, errMsgDiv);
+                    }
+                }
+            }
+        });
+
+
+        inputControl.change(function () {
+            var v = inputControl.val();
+            if (!errMsgDiv.hidden && $.isNumeric(v)) {
+                if (v >= 0) {
+                    errMsgDiv.hide();
+                }
+            }
+        });
+    }
+
+    // display error message if an land acres user input or actual production value input is not valid
+    // this function can also be used to check the value input in the forage production section
+    function CheckCarryingCapacityUserInput(nextLink, inputControl, errMsgDiv) {
+        nextLink.click(function (e) {
+            var v = inputControl.val();
+            if ($.isNumeric(v)) {
+                if (v < 0) {
+                    DisplayErrMsg(e, errMsgDiv);
+                }
+                else {
+                    errMsgDiv.hide();
+                }
+            }
+            else {
+                DisplayErrMsg(e, errMsgDiv);
+            }
+        });
+
+        inputControl.change(function () {
+            var v = inputControl.val();
+            if (!errMsgDiv.hidden && $.isNumeric(v)) {
+                if (v >= 0) {
+                    errMsgDiv.hide();
+                }
+            }
+        });
+    }
+
+    // show error message from hidden state to visual state when an input value is invalid
+    function DisplayErrMsg(e, errMsgDiv) {
+        e.preventDefault();
+        errMsgDiv.show();
+        errMsgDiv.text("Please input a valid value!");
+    }
+
+    // when user changes an acre value in an input box, change the total acre value as well
+    function OnAcresInputChange() {
+        var tv = 0;
+        var siteName;
+        for (var i = 0; i < siteList.length; i++) {
+            siteName = "input[name='" + siteList[i] + "']";
+            $(siteName).on("change", function () {
+                tv = AcresSum();
+                $('#totalAcres').val(tv);
+            });
+        }
+    }
+
+    // calculate the total acres
+    function AcresSum() {
+        var sum = 0;
+        var x;
+        for (var i = 0; i < siteList.length; i++) {
+            x = '#' + siteList[i];
+            sum += Number($(x).val());
+        }
+        return sum;
+    }
+
+    // get acre values from user input and store in an array
+    function GetAcres() {
+        var x;
+        for (var i = 0; i < siteList.length; i++) {
+            x = '#' + siteList[i];
+            acres[i] = Number($(x).val());
+        }
+    }
+
+    // in carrying capacity section, get actual forage production values from user input and store in an array
+    function GetActualProductionValues() {
+        var avs = [0, 0, 0, 0, 0, 0, 0];
+        var x;
+        for (var i = 0; i < siteList.length; i++) {
+            x = '#' + siteList[i] + '2';
+            avs[i] = Number($(x).val());
+        }
+        return avs;
+    }
+
+
+    // on carrying capacity section page one forward button click, go to page two
+    // display forage production values obtained from forage production section
+    function OnCarryingCapacityPageOneForwardClick() {
+        $('#CarryingCapacityOne_Forward').click(function (e) {
+            if (($('#totalAcres').val() <= 0) || (!$.isNumeric($('#totalAcres').val()))) {
+                alert('One or more of your acres input is invalid!');
+            }
+            else {
+                //GetHarvestEfficiency();
+
+                mapZoneIndex = GetMapzoneIndex();
+
+                defaultAumAc = EstimatedAumAc[mapZoneIndex];
+
+                defaultProductionValue = DefaultRelativeProductionValues[mapZoneIndex];
+
+                GetAcres();
+
+                totalAcres = AcresSum(siteList);
+
+                $('input[id=Total_AUM_c]').val("" + totalAums.toFixed(2));
+
+                if ($("input[name='CapacityMethod']:checked").val() === 'usingAum') { // carrying capacity method is using AUM/ac
+                    $('#div110').show();
+                    $('#div1222').hide();
+
+                    WorksheetBCalculation();
+                    Div110ResultsDisplay();
+                }
+
+                else { // carrying capacity method is using relative forage production value
+                    $('#div110').hide();
+                    $('#div1222').show();
+
+                    if ($("input[name='estimatedOrActual']:checked").val() === 'estimated') { // use estimated production values
+                        WorksheetCCalculation(defaultProductionValue);
+                    }
+                    else { // use actual production values
+                        WorksheetCCalculation(actualProductionValues);
+                    }
+
+                    Div1222ResultsDisplay();
+                }
+
+                $.mobile.navigate("#CarryingCapacityResultPage");
+            }
+
+        });
+    }
+
+    // On Carrying Capacity Page Two Forward button Click
+    // if rangeland is selected, go to detailed acres input page
+    // otherwise calculate results and go to Carrying Capacity result page
+    function OnCarryingCapacityPageTwoForwardClick() {
+        $('#CarryingCapacityTwo_Forward').click(function (e) {
+            GetHarvestEfficiency();
+
+            if ($("input[name='PastureType']:checked").val() === 'rangeland') { // pasture type is rangeland
+                actualProductionValues = GetActualProductionValues();
+                var t = 0;
+                for (var i = 0; i < SiteVegeTypeCount; i++) {
+                    t += actualProductionValues[i];
+                }
+                if ((t == 0) && ($("#actualProductionDiv").hidden === false)) {
+                    alert("Your actual production inputs are invalid!");
+                }
+                else {
+                    if (($("input[name='CapacityMethod']:checked").val() === 'usingProduction') && ($("input[name='estimatedOrActual']:checked").val() === 'actual'))
+                        $("#MajorLandTypeSelectionDiv").hide();
+                    else
+                        $("#MajorLandTypeSelectionDiv").show();
+                    $.mobile.navigate("#CarryingCapacityPageOne");
+                }
+            }
+            else { //non rangeland pasture
+                NonRangePastureCapacityCalculation();
+                Div1222ResultsDisplay();
+
+                $('#div110').hide();
+                $('#div1222').show();
+
+                // go to result page
+                $.mobile.navigate("#CarryingCapacityResultPage");
+            }
+
+        });
+    }
+
+    // on home page "carrying capacity" button click, read and display actual production values from forage production calculator
+    // and go to next page
+    function OnCarryingCapacityBtnClick() {
+        $('#carryingCapacityBtn').click(function (e) {
+            if (RangePastureFieldTypeIndex.length > 0) {
+                var inputIdArr = ['input[id=uplandLoamy2]', 'input[id=uplandSandy2]', 'input[id=uplandClayey2]', 'input[id=uplandShallow2]', 'input[id=uplandVShallow2]', 'input[id=lowlandOverflow2]', 'input[id=lowlandWetmeadow2]'];
+                for (var i = 0; i < RangePastureFieldTypeIndex.length; i++) {
+                    $(inputIdArr[RangePastureFieldTypeIndex[i]]).val("" + RangePastureForageResultArr[i].toFixed(1));
+                }
+            }
+            $('#ActualProductionInput').val("" + NonRangePastureForageResult.toFixed(1));
+
+            $.mobile.navigate("#CarryingCapacityPageTwo");
+        });
+    }
+
+    // go back from carrying capacity result page to different page depending on  if rangeland pasture type is selected or not
+    function OnCarryingCapacityResultPageBackBtnClick() {
+        $('#CarryingCapacityResultPage_Back').click(function (e) {
+            if ($("input[name='PastureType']:checked").val() === 'rangeland')
+                $.mobile.navigate("#CarryingCapacityPageOne");
+            else
+                $.mobile.navigate("#CarryingCapacityPageTwo");
+        });
+    }
+
+    // make the result displaying text box be readonly
+    function MakeDisplayingResultReadOnly() {
+        $('#Average_AUE').prop('readonly', true);
+        $('#Total_AUM').prop('readonly', true);
+        $('#totalAcres').prop('readonly', true);
+        $('#Plan110_TotalAums').prop('readonly', true);
+        $('#Plan110_TotalAvAums').prop('readonly', true);
+        $('#Plan110_AumAc').prop('readonly', true);
+        $('#Plan110_AcAum').prop('readonly', true);
+        $('#Plan110_AuemAc').prop('readonly', true);
+        $('#Plan110_AcAuem').prop('readonly', true);
+        $('#Plan1222_TotalProduction').prop('readonly', true);
+        $('#Plan1222_TotalForage').prop('readonly', true);
+        $('#Plan1222_TotalAums').prop('readonly', true);
+        $('#Plan1222_AumAc').prop('readonly', true);
+        $('#Plan1222_AcAum').prop('readonly', true);
+        $('#Plan1222_AuemAc').prop('readonly', true);
+        $('#Plan1222_AcAuem').prop('readonly', true);
+        $('#Total_AUM_c').prop('readonly', true);
+
+        $('#ForageProductionResultOutput').prop('readonly', true);
+
+        $('#uplandLoamyFP').prop('readonly', true);
+        $('#uplandSandyFP').prop('readonly', true);
+        $('#uplandClayeyFP').prop('readonly', true);
+        $('#uplandShallowFP').prop('readonly', true);
+        $('#uplandVShallowFP').prop('readonly', true);
+        $('#lowlandOverflowFP').prop('readonly', true);
+        $('#lowlandWetmeadowFP').prop('readonly', true);
+        $('#TotalFP_RP').prop('readonly', true);
+    }
+
+    // get the average aue value from user input in carrying capacity section
+    function GetAueInputValue() {
+        var avaue = Number($('#aaue').val());
+        if (avaue == 0)
+            avaue = NaN;
+        return avaue;
+    }
+
+    // read Non Range Pasture total acres value from text box
+    function GetNonRangePastureTotalAcres() {
+        return Number($('#TotalAcresNonRangelandInput').val());
+    }
+
+    // read Non Range Pasture Forage Production value from text box
+    function GetNonRangePastureForageProduction() {
+        return Number($('#ActualProductionInput').val());
+    }
+
+    // rangeland pasture carrying capacity calculation using estimated aum/ac
+    function WorksheetBCalculation() {
+        worksheetB_totalAums = 0;
+        for (var i = 0; i < SiteVegeTypeCount; i++)
+            worksheetB_totalAums += acres[i] * defaultAumAc[i];
+        worksheetB_totalAvailableAums = worksheetB_totalAums * (1 + (harvestEfficiency - 25) * 0.04);
+        worksheetB_aumAc = worksheetB_totalAvailableAums / totalAcres;
+        worksheetB_acAum = 1 / worksheetB_aumAc;
+        worksheetB_auemAc = worksheetB_aumAc / GetAueInputValue();
+        worksheetB_acAuem = 1 / worksheetB_auemAc;
+    }
+
+    // rangeland pasture carrying capacity calculation using relative forage production value
+    function WorksheetCCalculation(productionValues) {
+        worksheetC_totalProduction = 0;
+        for (var i = 0; i < SiteVegeTypeCount; i++)
+            worksheetC_totalProduction += acres[i] * productionValues[i];
+        worksheetC_totalAvailableForage = worksheetC_totalProduction * harvestEfficiency / 100;
+        worksheetC_totalAums = worksheetC_totalAvailableForage / 913;
+        worksheetC_aumAc = worksheetC_totalAums / totalAcres;
+        worksheetC_acAum = 1 / worksheetC_aumAc;
+        worksheetC_auemAc = worksheetC_aumAc / GetAueInputValue();
+        worksheetC_acAuem = 1 / worksheetC_auemAc;
+    }
+
+    // Non rangeland pasture carrying capacity calculation using actual forage production value
+    function NonRangePastureCapacityCalculation() {
+        var ta = GetNonRangePastureTotalAcres();
+        var tp = GetNonRangePastureForageProduction();
+        worksheetC_totalProduction = ta * tp;
+        worksheetC_totalAvailableForage = worksheetC_totalProduction * harvestEfficiency / 100;
+        worksheetC_totalAums = worksheetC_totalAvailableForage / 913;
+        worksheetC_aumAc = worksheetC_totalAums / ta;
+        worksheetC_acAum = 1 / worksheetC_aumAc;
+        worksheetC_auemAc = worksheetC_aumAc / GetAueInputValue();
+        worksheetC_acAuem = 1 / worksheetC_auemAc;
+    }
+
+
+    function Div110ResultsDisplay() {
+        $('input[id=Plan110_TotalAums]').val("" + worksheetB_totalAums.toFixed(2));
+        $('input[id=Plan110_TotalAvAums]').val("" + worksheetB_totalAvailableAums.toFixed(2));
+        $('input[id=Plan110_AumAc]').val("" + worksheetB_aumAc.toFixed(2));
+        $('input[id=Plan110_AcAum]').val("" + worksheetB_acAum.toFixed(2));
+        $('input[id=Plan110_AuemAc]').val("" + worksheetB_auemAc.toFixed(2));
+        $('input[id=Plan110_AcAuem]').val("" + worksheetB_acAuem.toFixed(2));
+    }
+
+    function Div1222ResultsDisplay() {
+        $('input[id=Plan1222_TotalProduction]').val("" + worksheetC_totalProduction.toFixed(0));
+        $('input[id=Plan1222_TotalForage]').val("" + worksheetC_totalAvailableForage.toFixed(0));
+        $('input[id=Plan1222_TotalAums]').val("" + worksheetC_totalAums.toFixed(2));
+        $('input[id=Plan1222_AumAc]').val("" + worksheetC_aumAc.toFixed(2));
+        $('input[id=Plan1222_AcAum]').val("" + worksheetC_acAum.toFixed(2));
+        $('input[id=Plan1222_AuemAc]').val("" + worksheetC_auemAc.toFixed(2));
+        $('input[id=Plan1222_AcAuem]').val("" + worksheetC_acAuem.toFixed(2));
+    }
+
+
+    function onPause() {
+        // TODO: This application has been suspended. Save application state here.
+    }
+
+    function onResume() {
+        // TODO: This application has been reactivated. Restore application state here.
+    }
+})();
