@@ -8,6 +8,11 @@
     document.addEventListener( 'deviceready', onDeviceReady.bind( this ), false );
 
     // global variables and definitions go here
+
+
+
+
+
     // before "onDeviceReady"
 
     function onDeviceReady() {

@@ -1,0 +1,136 @@
+
+
+body{
+    background-color:lightgoldenrodyellow;
+
+}
+
+footer{
+	text-align:center;
+	background-color: gainsboro !important;
+    font-size:small;
+}
+
+#developerInfo{
+    font-size:smaller;
+    color:darkblue;
+}
+
+.nav-tabs {
+    text-align:center;
+}
+
+.nav-tabs > li {
+    float:none;
+    display:inline-block;
+    zoom:1;
+}
+
+.nav-tabs>li>a{
+	color: black !important;
+	font-size:medium;
+	margin:0 2px !important;
+}
+
+.nav-tabs>li.active{
+	font-size:large;
+	font-weight:bold;
+	background-color:chartreuse !important;
+}
+
+.photocss{
+    float:left; 
+    margin-right:10px; 
+    height:100px;
+}
+
+#TomName{
+    font-weight:bold;
+    font-size:large;
+}
+
+#fmla{
+    font-weight:bold;
+    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-style:italic;
+    font-size:medium;
+}
+
+.width80{
+    width:80%;
+    text-align:center;
+}
+
+.paddingleft{
+    padding-left:10%;
+}
+
+.paddingleft input{
+    width:80%;
+    text-align:center;
+}
+
+
+.paddingleft label,.radiotext{
+    font-weight:bold;
+    font-size:medium;
+}
+
+hr {
+  border: 0;
+  clear:both;
+  display:block;
+  width: 96%;               
+  background-color:brown;
+  height: 1px;
+}
+
+#esp-sar-div{
+    border-color:darkkhaki;
+    border-style:solid; 
+    text-align:center;
+}
+
+#desc{
+    background-color:forestgreen;
+    color:white;
+}
+
+#resultSpan{
+    font-size:large;
+    font-weight:bold;
+}
+
+.wrapper {
+    display:inline-block;
+    position:relative;
+    width:100% !important;
+}
+
+.wrapper input{
+    text-align:center !important;
+    font-size:medium !important;
+}
+
+.clearBtn{
+    opacity:50 !important;
+    position:absolute !important;
+    top:0 !important;
+    bottom: 0 !important;
+    background-color:lightgray !important;
+    border:0 !important;
+    font-size:10pt !important;
+}
+
+.clearBtn span{
+    font-weight:200;
+}
+
+#resultDiv{
+    margin-bottom:40px; 
+    background-color:aliceblue;
+    color:black;
+    text-align:center; 
+    font-size:medium;
+}
+

@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!--
+        Customize the content security policy in the meta tag below as needed. Add 'unsafe-inline' to default-src to enable inline JavaScript.
+        For details, see http://go.microsoft.com/fwlink/?LinkID=617521
+    -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="msapplication-tap-highlight" content="no">
+    <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width">
+
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/index.css">
+
+    <script src="scripts/jquery-3.2.1.min.js"></script>
+    <script src="scripts/bootstrap.min.js"></script>
+    <script src="cordova.js"></script>
+    <script src="scripts/platformOverrides.js"></script>
+    <script src="scripts/index.js"></script>
+
+    <title>Gypsum Calculator</title>
+</head>
+
+<body>
+    <div>
+        <div class="container-fluid" style="background-color:darkcyan;">
+            <h2 class="text-center">
+                <a href="#" class="pull-left" id="GoHome"><img src="images/cordova.png" class="img-rounded" alt="Logo" width="30" height="30"></a>
+                <span style="font-size: x-large; font-weight:bolder; color: gold;">Gypsum Calculator</span>
+            </h2>
+        </div>
+    </div>
+
+    <div class="container-fluid">
+        <ul class="nav nav-tabs">
+            <li class="active"><a href="#home" data-toggle="tab">Home</a></li>
+            <li><a href="#calculator" data-toggle="tab">Calculator</a></li>
+            <li><a href="#contact" data-toggle="tab">Contact</a></li>
+        </ul>
+        <div class="tab-content">
+            <div id="home" class="tab-pane fade in active">
+                <br />
+                <div class="panel-group" id="accordion">
+                    <div class="panel panel-info">
+                        <div class="panel-heading" data-toggle="collapse" data-target="#collapse1" data-parent="#accordion">
+                            <br />
+                            <h4 class="panel-title">
+                                <a>ABOUT</a>
+                            </h4>
+                        </div>
+                        <div id="collapse1" class="panel-collapse collapse in">
+                            <div class="panel-body">
+                                Brief intro goes here.
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel panel-info">
+                        <div class="panel-heading" data-toggle="collapse" data-target="#collapse2" data-parent="#accordion">
+                            <br />
+                            <h4 class="panel-title">
+                                <a>FORMULA</a>
+                            </h4>
+                        </div>
+                        <div id="collapse2" class="panel-collapse collapse">
+                            <br />
+                            You can use either
+                            <div class="panel-body">
+                                <p id="fmla">GR<sub>adj</sub>=0.86*F*D*&rho;<sub>b</sub>*CEC*(ESP<sub>i</sub>-ESP<sub>f</sub>)/p</p>
+                            </div>
+                            or
+                            <div class="panel-body">
+                                <p id="fmla">GR<sub>adj</sub>=0.86*F*D*&rho;<sub>b</sub>*CEC*(SAR<sub>i</sub>-SAR<sub>f</sub>)/p</p>
+                            </div>
+                            where <br />
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Symbol</th>
+                                        <th>Definition</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><i>GR<sub>adj</sub></i></td>
+                                        <td>Amount of gypsum requirement. Adjusted by its purity. unit: Mg ha<sup>-1</sup></td>
+                                    </tr>
+                                    <tr>
+                                        <td><i>ESP</i></td>
+                                        <td>exchangeable sodium percentage, unit: %</td>
+                                    </tr>
+                                    <tr>
+                                        <td><i>ESP<sub>i</sub></i></td>
+                                        <td>initial <i>ESP</i> level</td>
+                                    </tr>
+                                    <tr>
+                                        <td><i>ESP<sub>f</sub></i></td>
+                                        <td>final or target <i>ESP</i> level</td>
+                                    </tr>
+                                    <tr>
+                                        <td><i>SAR</i></td>
+                                        <td>sodium adsorption ratio, unit: %</td>
+                                    </tr>
+                                    <tr>
+                                        <td><i>SAR<sub>i</sub></i></td>
+                                        <td>initial <i>SAR</i> level</td>
+                                    </tr>
+                                    <tr>
+                                        <td><i>SAR<sub>f</sub></i></td>
+                                        <td>final or target <i>SAR</i> level</td>
+                                    </tr>
+                                    <tr>
+                                        <td><i>CEC</i></td>
+                                        <td>cation exchange capacity, unit: mmol<sub>c</sub> kg<sup>-1</sup></td>
+                                    </tr>
+                                    <tr>
+                                        <td><i>D</i></td>
+                                        <td>soil depth, unit: m</td>
+                                    </tr>
+                                    <tr>
+                                        <td><i>&rho;<sub>b</sub></i></td>
+                                        <td>soil bulk density, unit: Mg m<sup>-3</sup></td>
+                                    </tr>
+                                    <tr>
+                                        <td><i>F</i></td>
+                                        <td>a correction factor that has no units and ranges from 1.1 to 1.3 depending on <i>ESP<sub>f</sub></i> or <i>SAR<sub>f</sub></i></td>
+                                    </tr>
+                                    <tr>
+                                        <td><i>p</i></td>
+                                        <td>gypsum purity, unit: %</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <br />
+                <p style="text-align:center;opacity:0;">*****************************************</p>
+            </div>
+            <div id="calculator" class="tab-pane fade">
+                <br />
+                <h4 id="desc">Input each required parameter value below to conduct gypsum requirement calculation. All fields are required.</h4>
+                <hr>
+
+                <div class="paddingleft">
+                    <label for="depth">Soil Depth (m)</label><br />
+                    <div class="wrapper">
+                        <input type="text" id="depthInput" placeholder="positive value">
+                        <button id="depthClearBtn" class="clearBtn">X</button>
+                    </div>
+                </div>
+                <br />
+                <div class="paddingleft">
+                    <label for="density">Soil Bulk Density (Mg m<sup>-3</sup>)</label><br />
+                    <div class="wrapper">
+                        <input type="text" id="densityInput" placeholder="positive value">
+                        <button id="densityClearBtn" class="clearBtn">X</button>
+                    </div>
+                </div>
+                <br />
+                <div class="paddingleft">
+                    <label for="cec">CEC (mmol<sub>c</sub> kg<sup>-1</sup>)</label><br />
+                    <div class="wrapper">
+                        <input type="text" id="cecInput" placeholder="positive value">
+                        <button id="cecClearBtn" class="clearBtn">X</button>
+                    </div>
+                </div>
+                <br />
+                <div class="paddingleft">
+                    <label for="purity">Gypsum Purity (%)</label><br />
+                    <div class="wrapper">
+                        <input type="text" id="purityInput" placeholder="value between 1 and 100">
+                        <button id="purityClearBtn" class="clearBtn">X</button>
+                    </div>
+                </div>
+                <br />
+                <div id="esp-sar-div">
+                    <label class="radio-inline">
+                        <input type="radio" name="optradio" checked="checked" value="esp"><span class="radiotext">use ESP</span>
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" name="optradio" value="sar"><span class="radiotext">use SAR</span>
+                    </label>
+                    <br /><br />
+                    <div id="espInputDiv">
+                        <div class="radiotext">
+                            <label for="espi">Initial ESP (%)</label><br />
+                            <div class="wrapper">
+                                <input type="text" id="espiInput" placeholder="value between 0 and 100">
+                                <button id="espiClearBtn" class="clearBtn"><span>X</span></button>
+                            </div>
+                        </div>
+                        <div class="radiotext">
+                            <label for="espf">Target ESP (%)</label><br />
+                            <div class="wrapper">
+                                <input type="text" id="espfInput" placeholder="value between 0 and 100">
+                                <button id="espfClearBtn" class="clearBtn"><span>X</span></button>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="sarInputDiv" style="display:none;">
+                        <div class="radiotext">
+                            <label for="sari">Initial SAR (%)</label><br />
+                            <div class="wrapper">
+                                <input type="text" id="sariInput" placeholder="value between 0 and 100">
+                                <button id="sariClearBtn" class="clearBtn"><span>X</span></button>
+                            </div>
+                        </div>
+                        <div class="radiotext">
+                            <label for="sarf">Target SAR (%)</label><br />
+                            <div class="wrapper">
+                                <input type="text" id="sarfInput" placeholder="value between 0 and 100">
+                                <button id="sarfClearBtn" class="clearBtn"><span>X</span></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <br />
+                <div style="float:right;">
+                    <button id="calcBtn" type="button" class="btn btn-primary btn-lg"><span>Calculate</span></button><br />
+                    <label>Result will display below.</label>
+                </div>
+                
+                <hr><hr>
+
+                <div id="resultDiv">
+                    <label>Gypsum Requirement (Mg ha<sup>-1</sup>)</label><br />
+                    <span id="resultSpan"></span>
+                </div>
+                <br />
+                <br />
+                <br />
+
+            </div>
+            <div id="contact" class="tab-pane fade">
+                <br />
+                <h4>For more information, please contact:</h4>
+                <div>
+                    <br />
+                    <a href="https://www.ndsu.edu/soils/personnel/faculty/dr_tom_desutter/" target="_blank"><img src="images/DeSutter.jpg" alt="Dr. Tom DeSutter" class="photocss img-circle"></a>
+                    <br />
+                    <a href="https://www.ndsu.edu/soils/personnel/faculty/dr_tom_desutter/" target="_blank"><span id="TomName">Dr. Tom DeSutter</span></a>
+                    <p style="font-size:medium; font-weight:bold;">Associate Professor <br /> Soil Science Program Leader</p>
+                </div>
+                <br />
+
+                <div style="font-size:10pt; float:left;">
+                    <br />
+                    <p><u>Office:</u> <b>214 Walster Hall, Box 6050, NDSU</b></p>
+                    <p><u>Phone:</u> <b>701-231-8690</b></p>
+                    <p><u>Email:</u> <b>Thomas.Desutter@ndsu.edu</b></p>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+
+
+
+
+
+    <footer class="navbar-default navbar-fixed-bottom">
+        <div class="container-fluid">
+            <p>
+                &copy; <span class="dynamic-year"></span> Department of Soil Science, North Dakota State University. All rights reserved.<br />
+                <span id="developerInfo">Developed by Honggang Bu for Dr. Tom DeSutter.</span>
+            </p>
+        </div>
+    </footer>
+</body>
+</html>
