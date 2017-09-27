@@ -97,7 +97,7 @@
             return NaN;
         }
         else
-            return v;
+            return Number(v);
     }
 
     //
@@ -108,7 +108,7 @@
             return NaN;
         }
         else
-            return v;
+            return Number(v);
     }
 
     //
@@ -121,51 +121,51 @@
             var k = 0, f, gr;
             var alertstr = 'Invalid input for each of the following field(s):\n\n';
 
-            var depthValue = Number(NumericInputValidation('depthInput'));
+            var depthValue = NumericInputValidation('depthInput');
             if (isNaN(depthValue)) {
                 alertstr += '- ' + 'Soil Depth' + '\n';
                 k += 1;
             }
 
-            var densityValue = Number(NumericInputValidation('densityInput'));
+            var densityValue = NumericInputValidation('densityInput');
             if (isNaN(densityValue)) {
                 alertstr += '- ' + 'Soil Bulk Density' + '\n';
                 k += 1
             }
 
-            var cecValue = Number(NumericInputValidation('cecInput'));
+            var cecValue = NumericInputValidation('cecInput');
             if (isNaN(cecValue)) {
                 alertstr += '- ' + 'CEC' + '\n';
                 k += 1
             }
 
-            var purityValue = Number(NumericInputValidation2('purityInput'));
+            var purityValue = NumericInputValidation2('purityInput');
             if (isNaN(purityValue)) {
                 alertstr += '- ' + 'Gypsum Purity' + '\n';
                 k += 1
             }
 
             if ($("input[name='optradio']:checked").val() === 'esp') {
-                var espiValue = Number(NumericInputValidation('espiInput'));
+                var espiValue = NumericInputValidation('espiInput');
                 if (isNaN(espiValue)) {
                     alertstr += '- ' + 'Initial ESP' + '\n';
                     k += 1
                 }
 
-                var espfValue = Number(NumericInputValidation('espfInput'));
+                var espfValue = NumericInputValidation('espfInput');
                 if (isNaN(espfValue)) {
                     alertstr += '- ' + 'Target ESP' + '\n';
                     k += 1
                 }
             }
             else {
-                var sariValue = Number(NumericInputValidation('sariInput'));
+                var sariValue = NumericInputValidation('sariInput');
                 if (isNaN(sariValue)) {
                     alertstr += '- ' + 'Initial SAR' + '\n';
                     k += 1
                 }
 
-                var sarfValue = Number(NumericInputValidation('sarfInput'));
+                var sarfValue = NumericInputValidation('sarfInput');
                 if (isNaN(sarfValue)) {
                     alertstr += '- ' + 'Target SAR' + '\n';
                     k += 1

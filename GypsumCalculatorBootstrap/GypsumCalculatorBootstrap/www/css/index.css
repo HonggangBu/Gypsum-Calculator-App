@@ -71,7 +71,7 @@ footer{
 }
 
 
-.paddingleft label,.radiotext{
+.paddingleft label,.radiotext label, span.radiotext{
     font-weight:bold;
     font-size:medium;
 }
