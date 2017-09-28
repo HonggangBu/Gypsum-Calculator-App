@@ -1,6 +1,4 @@
-﻿// For an introduction to the Blank template, see the following documentation:
-// http://go.microsoft.com/fwlink/?LinkID=397704
-// To debug code on page load in Ripple or on Android devices/emulators: launch your app, set breakpoints, 
+﻿// To debug code on page load in Ripple or on Android devices/emulators: launch your app, set breakpoints, 
 // and then run "window.location.reload()" in the JavaScript Console.
 (function () {
     "use strict";
@@ -12,7 +10,6 @@
         document.addEventListener('pause', onPause.bind(this), false);
         document.addEventListener('resume', onResume.bind(this), false);
 
-        // TODO: Cordova has been loaded. Perform any initialization that requires Cordova here.
 
         // Dynamically show the current year in the footer copyright
         $(".dynamic-year").text((new Date()).getFullYear());
@@ -23,13 +20,13 @@
             $('.nav-tabs a[href="#home"]').tab('show');
         });
 
-        //
+        // event on change of selection of ESP or SAR
         OnEspSarSelectChange();
 
-        //
+        // collection of clear button click events
         ClearInputCollection();
 
-        //
+        // each input field content change will result in clearing the result displaying area
         $('input[type=text]').each(function () {
             $(this).on("change", function () {
                 $('#resultSpan').text('');
@@ -37,13 +34,14 @@
         });
 
 
-        //
+        // event on calculate button click
         OnCalculateBtnClick();
     }
 
-    // 
-    function OnEspSarSelectChange() {
+    //** the following are subroutines **//
 
+    // events on ESP or SAR selection change
+    function OnEspSarSelectChange() {
         $("input[name='optradio']").on("change", function () {
             $('#resultSpan').text('');
             if ($("input[name='optradio']:checked").val() === 'esp') {
@@ -57,7 +55,7 @@
         });
     }
 
-    //
+    // clear input field content and empty result on clicking the cross button
     function ClearInput(clearBtnFull, inputControlFull) {
         clearBtnFull.click(function (e) {
             $(inputControlFull).val('');
@@ -65,7 +63,7 @@
         });
     }
 
-    //
+    // collection of clear input events
     function ClearInputCollection() {
         ClearInput($('#depthClearBtn'), 'input[id=depthInput]');
         ClearInput($('#densityClearBtn'), 'input[id=densityInput]');
@@ -77,7 +75,7 @@
         ClearInput($('#sarfClearBtn'), 'input[id=sarfInput]');
     }
 
-    //
+    // calculate the factor constant value based on target ESP or SAR value
     function GetFactorValue(espf) {
         var f;
         if (espf >= 15)
@@ -89,7 +87,7 @@
         return f;
     }
 
-    //
+    // get and validate user general numeric value input
     function NumericInputValidation(inputId) {
         var ss = 'input[id=' + inputId + ']';
         var v = $.trim($(ss).val());
@@ -100,7 +98,7 @@
             return Number(v);
     }
 
-    //
+    // get and validate user percentage value input
     function NumericInputValidation2(inputId) {
         var ss = 'input[id=' + inputId + ']';
         var v = $.trim($(ss).val());
@@ -111,11 +109,14 @@
             return Number(v);
     }
 
-    //
+    // function to calculate gypsum requirement
     function GypsumRequirement(fct, depth, density, cec, iv, fv, p) {
         return 0.86 * fct * depth * density * cec * (iv - fv) / p;
     }
 
+    // events On clicking the calculate button
+    // get and validate each input value
+    // calculate gypsum requirement
     function OnCalculateBtnClick() {
         document.getElementById("calcBtn").addEventListener("click", function () {
             var k = 0, f, gr;
@@ -146,26 +147,26 @@
             }
 
             if ($("input[name='optradio']:checked").val() === 'esp') {
-                var espiValue = NumericInputValidation('espiInput');
+                var espiValue = NumericInputValidation2('espiInput');
                 if (isNaN(espiValue)) {
                     alertstr += '- ' + 'Initial ESP' + '\n';
                     k += 1
                 }
 
-                var espfValue = NumericInputValidation('espfInput');
+                var espfValue = NumericInputValidation2('espfInput');
                 if (isNaN(espfValue)) {
                     alertstr += '- ' + 'Target ESP' + '\n';
                     k += 1
                 }
             }
             else {
-                var sariValue = NumericInputValidation('sariInput');
+                var sariValue = NumericInputValidation2('sariInput');
                 if (isNaN(sariValue)) {
                     alertstr += '- ' + 'Initial SAR' + '\n';
                     k += 1
                 }
 
-                var sarfValue = NumericInputValidation('sarfInput');
+                var sarfValue = NumericInputValidation2('sarfInput');
                 if (isNaN(sarfValue)) {
                     alertstr += '- ' + 'Target SAR' + '\n';
                     k += 1
@@ -177,7 +178,7 @@
                 alert(alertstr);
             else {
                 // do calculation
-                if ($("input[name='optradio']:checked").val() === 'esp') {
+                if ($("input[name='optradio']:checked").val() === 'esp') {// if use ESP
                     if (espfValue < espiValue) {
                         f = GetFactorValue(espfValue);
                         gr = GypsumRequirement(f, depthValue, densityValue, cecValue, espiValue, espfValue, purityValue);
@@ -186,7 +187,7 @@
                     else
                         alert('Target ESP level must be lower than Initial ESP level!');
                 }
-                else {
+                else {// if use SAR
                     if (sarfValue < sariValue) {
                         f = GetFactorValue(sarfValue);
                         gr = GypsumRequirement(f, depthValue, densityValue, cecValue, sariValue, sarfValue, purityValue);
@@ -197,10 +198,6 @@
                 }
 
             }
-
-
-
-
 
         });
 
