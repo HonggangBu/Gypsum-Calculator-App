@@ -131,45 +131,45 @@
             var densityValue = NumericInputValidation('densityInput');
             if (isNaN(densityValue)) {
                 alertstr += '- ' + 'Soil Bulk Density' + '\n';
-                k += 1
+                k += 1;
             }
 
             var cecValue = NumericInputValidation('cecInput');
             if (isNaN(cecValue)) {
                 alertstr += '- ' + 'CEC' + '\n';
-                k += 1
+                k += 1;
             }
 
             var purityValue = NumericInputValidation2('purityInput');
             if (isNaN(purityValue)) {
                 alertstr += '- ' + 'Gypsum Purity' + '\n';
-                k += 1
+                k += 1;
             }
 
             if ($("input[name='optradio']:checked").val() === 'esp') {
                 var espiValue = NumericInputValidation2('espiInput');
                 if (isNaN(espiValue)) {
                     alertstr += '- ' + 'Initial ESP' + '\n';
-                    k += 1
+                    k += 1;
                 }
 
                 var espfValue = NumericInputValidation2('espfInput');
                 if (isNaN(espfValue)) {
                     alertstr += '- ' + 'Target ESP' + '\n';
-                    k += 1
+                    k += 1;
                 }
             }
             else {
                 var sariValue = NumericInputValidation2('sariInput');
                 if (isNaN(sariValue)) {
                     alertstr += '- ' + 'Initial SAR' + '\n';
-                    k += 1
+                    k += 1;
                 }
 
                 var sarfValue = NumericInputValidation2('sarfInput');
                 if (isNaN(sarfValue)) {
                     alertstr += '- ' + 'Target SAR' + '\n';
-                    k += 1
+                    k += 1;
                 }
             }
 
@@ -208,9 +208,9 @@
 
     function onPause() {
         // TODO: This application has been suspended. Save application state here.
-    };
+    }
 
     function onResume() {
         // TODO: This application has been reactivated. Restore application state here.
-    };
+    }
 })();

@@ -7,7 +7,11 @@ body{
 footer{
 	text-align:center;
 	background-color: gainsboro !important;
-    font-size:small;
+    font-size:smaller;
+}
+
+#fd{
+    font-size:smaller;
 }
 
 #developerInfo{
@@ -96,7 +100,7 @@ hr {
 }
 
 #resultSpan{
-    font-size:large;
+    font-size:x-large;
     font-weight:bold;
 }
 
@@ -131,5 +135,21 @@ hr {
     color:black;
     text-align:center; 
     font-size:medium;
+    border:solid;
+    border-color:darkgreen;
+    height: 80px;
 }
 
+#contactInfo{
+    font-size:10pt; 
+    float:left; 
+    margin-bottom:70px;
+}
+
+#intro p{
+    font-size:medium;
+}
+
+.dynamic-year{
+    font-size:x-small;
+}
