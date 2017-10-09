@@ -1,32 +1,27 @@
 
 
 body{
-    background-color:lightgoldenrodyellow;
+	background-color:lightgoldenrodyellow;
 }
 
 footer{
 	text-align:center;
 	background-color: gainsboro !important;
-    font-size:smaller;
+	font-size:smaller;
 }
 
 #fd{
-    font-size:smaller;
-}
-
-#developerInfo{
-    font-size:smaller;
-    color:darkblue;
+	font-size:smaller;
 }
 
 .nav-tabs {
-    text-align:center;
+	text-align:center;
 }
 
 .nav-tabs > li {
-    float:none;
-    display:inline-block;
-    zoom:1;
+	float:none;
+	display:inline-block;
+	zoom:1;
 }
 
 .nav-tabs>li>a{
@@ -42,41 +37,41 @@ footer{
 }
 
 .photocss{
-    float:left; 
-    margin-right:10px; 
-    height:100px;
+	float:left; 
+	margin-right:10px; 
+	height:100px;
 }
 
 #TomName{
-    font-weight:bold;
-    font-size:large;
+	font-weight:bold;
+	font-size:large;
 }
 
 #fmla{
-    font-weight:bold;
-    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    font-style:italic;
-    font-size:medium;
+	font-weight:bold;
+	font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+	font-style:italic;
+	font-size:medium;
 }
 
 .width80{
-    width:80%;
-    text-align:center;
+	width:80%;
+	text-align:center;
 }
 
 .paddingleft{
-    padding-left:10%;
+	padding-left:10%;
 }
 
 .paddingleft input{
-    width:80%;
-    text-align:center;
+	width:80%;
+	text-align:center;
 }
 
 
 .paddingleft label,.radiotext label, span.radiotext{
-    font-weight:bold;
-    font-size:medium;
+	font-weight:bold;
+	font-size:medium;
 }
 
 hr {
@@ -89,67 +84,74 @@ hr {
 }
 
 #esp-sar-div{
-    border-color:darkkhaki;
-    border-style:solid; 
-    text-align:center;
+	border-color:darkkhaki;
+	border-style:solid; 
+	text-align:center;
 }
 
 #desc{
-    background-color:forestgreen;
-    color:white;
+	background-color:forestgreen;
+	color:white;
 }
 
 #resultSpan{
-    font-size:x-large;
-    font-weight:bold;
+	font-size:x-large;
+	font-weight:bold;
 }
 
 .wrapper {
-    display:inline-block;
-    position:relative;
-    width:100% !important;
+	display:inline-block;
+	position:relative;
+	width:100% !important;
 }
 
 .wrapper input{
-    text-align:center !important;
-    font-size:medium !important;
+	text-align:center !important;
+	font-size:medium !important;
 }
 
 .clearBtn{
-    opacity:50 !important;
-    position:absolute !important;
-    top:0 !important;
-    bottom: 0 !important;
-    background-color:lightgray !important;
-    border:0 !important;
-    font-size:10pt !important;
+	opacity:50 !important;
+	position:absolute !important;
+	top:0 !important;
+	bottom: 0 !important;
+	background-color:lightgray !important;
+	border:0 !important;
+	font-size:10pt !important;
 }
 
 .clearBtn span{
-    font-weight:100 !important;
+	font-weight:100 !important;
 }
 
 #resultDiv{
-    margin-bottom:40px; 
-    background-color:aliceblue;
-    color:black;
-    text-align:center; 
-    font-size:medium;
-    border:solid;
-    border-color:darkgreen;
-    height: 80px;
+	margin-bottom:40px; 
+	background-color:aliceblue;
+	color:black;
+	text-align:center; 
+	font-size:medium;
+	border:solid;
+	border-color:darkgreen;
+	height: 80px;
 }
 
 #contactInfo{
-    font-size:10pt; 
-    float:left; 
+	font-size:10pt; 
+	float:left; 
     margin-bottom:70px;
 }
 
 #intro p{
-    font-size:medium;
+	font-size:medium !important;
 }
 
 .dynamic-year{
-    font-size:x-small;
+	font-size:x-small;
+}
+
+.collapseBtn{
+    cursor:pointer; 
+    width:100% !important; 
+    font-weight:bold !important; 
+    font-size:large !important;
 }

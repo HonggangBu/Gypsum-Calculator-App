@@ -34,14 +34,16 @@
 
     <div class="container-fluid">
         <ul class="nav nav-tabs">
-            <li class="active"><a href="#home" data-toggle="tab">Home</a></li>
+            <li class="active"><a href="#home" data-toggle="tab">About</a></li>
             <li><a href="#calculator" data-toggle="tab">Calculator</a></li>
             <li><a href="#formula" data-toggle="tab">Formula</a></li>
         </ul>
         <div class="tab-content">
             <div id="home" class="tab-pane fade in active">
                 <br />
-                <div id="intro">
+                <button data-toggle="collapse" data-target="#intro" class="collapseBtn">Brief Intro</button>
+                <div id="intro" class="collapse">
+                    <br />
                     <p>
                         Welcome to the NDSU gypsum requirement (GR) mobile app. The calculations are based on the equation of Oster et al. (1999).
                         To determine GR (in Mg/ha; e.g. 1 Mg/ha = 1.1 tons/acre) the equation requires knowledge of the 1) depth, D,
@@ -70,11 +72,12 @@
                             677 S. Segoe Rd. 808 Madison, WI 53711. USA. p.659-691.
                         </i>
                     </p>
+
+                    <p style="background-color:antiquewhite;">[App Developer] <b>Honggang Bu</b></p>
                 </div>
 
                 <hr>
-                <br />
-                <h4>For more information, please contact:</h4>
+                <h5>For more information, please contact:</h5>
                 <div>
                     <a href="https://www.ndsu.edu/soils/personnel/faculty/dr_tom_desutter/" target="_blank"><img src="images/DeSutter.jpg" alt="Dr. Tom DeSutter" class="photocss img-circle"></a>
                     <br />
@@ -84,7 +87,6 @@
                 <br />
 
                 <div id="contactInfo">
-                    <br />
                     <p><u>Office:</u> <b>214 Walster Hall, Box 6050, NDSU</b></p>
                     <p><u>Phone:</u> <b>701-231-8690</b></p>
                     <p><u>Email:</u> <b>Thomas.Desutter@ndsu.edu</b></p>
@@ -191,7 +193,6 @@
             <div id="formula" class="tab-pane fade">
                 <br />
                 <div style="margin-bottom:80px !important;">
-                    <br />
                     You can use either
 
                     <p id="fmla">GR<sub>adj</sub>=0.86*F*D*&rho;<sub>b</sub>*CEC*(ESP<sub>i</sub>-ESP<sub>f</sub>)/p</p>
@@ -276,8 +277,7 @@
     <footer class="navbar-default navbar-fixed-bottom">
         <div class="container-fluid">
             <p>
-                &copy; <span class="dynamic-year"></span> <span id="fd">Department of Soil Science, North Dakota State University.</span><br />
-                <span id="developerInfo">Developed by Honggang Bu for Dr. Tom DeSutter.</span>
+                &copy; <span class="dynamic-year"></span> <span id="fd">Department of Soil Science, <br />North Dakota State University.</span><br />
             </p>
         </div>
     </footer>
