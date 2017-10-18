@@ -34,12 +34,12 @@
 
     <div class="container-fluid">
         <ul class="nav nav-tabs">
-            <li class="active"><a href="#home" data-toggle="tab">About</a></li>
-            <li><a href="#calculator" data-toggle="tab">Calculator</a></li>
+            <li><a href="#home" data-toggle="tab">About</a></li>
+            <li class="active"><a href="#calculator" data-toggle="tab">Calculator</a></li>
             <li><a href="#formula" data-toggle="tab">Formula</a></li>
         </ul>
         <div class="tab-content">
-            <div id="home" class="tab-pane fade in active">
+            <div id="home" class="tab-pane fade">
                 <br />
                 <button data-toggle="collapse" data-target="#intro" class="collapseBtn">Brief Intro</button>
                 <div id="intro" class="collapse">
@@ -77,6 +77,7 @@
                 </div>
 
                 <hr>
+                <br />
                 <h5>For more information, please contact:</h5>
                 <div>
                     <a href="https://www.ndsu.edu/soils/personnel/faculty/dr_tom_desutter/" target="_blank"><img src="images/DeSutter.jpg" alt="Dr. Tom DeSutter" class="photocss img-circle"></a>
@@ -91,9 +92,16 @@
                     <p><u>Phone:</u> <b>701-231-8690</b></p>
                     <p><u>Email:</u> <b>Thomas.Desutter@ndsu.edu</b></p>
                 </div>
-
+                
+                <footer class="navbar-default navbar-fixed-bottom">
+                    <div class="container-fluid">
+                        <p>
+                            &copy; <span class="dynamic-year"></span> <span id="fd">Department of Soil Science, <br />North Dakota State University.</span><br />
+                        </p>
+                    </div>
+                </footer>
             </div>
-            <div id="calculator" class="tab-pane fade">
+            <div id="calculator" class="tab-pane fade in active">
                 <br />
                 <h4 id="desc">Input each required parameter value below to conduct gypsum requirement calculation. All fields are required.</h4>
                 <hr>
@@ -185,14 +193,11 @@
                     <label>Gypsum Requirement (Mg ha<sup>-1</sup>)</label><br />
                     <span id="resultSpan"></span>
                 </div>
-                <br />
-                <br />
-                <br />
 
             </div>
             <div id="formula" class="tab-pane fade">
                 <br />
-                <div style="margin-bottom:80px !important;">
+                <div>
                     You can use either
 
                     <p id="fmla">GR<sub>adj</sub>=0.86*F*D*&rho;<sub>b</sub>*CEC*(ESP<sub>i</sub>-ESP<sub>f</sub>)/p</p>
@@ -200,8 +205,8 @@
                     or
 
                     <p id="fmla">GR<sub>adj</sub>=0.86*F*D*&rho;<sub>b</sub>*CEC*(SAR<sub>i</sub>-SAR<sub>f</sub>)/p</p>
-
-                    where <br />
+                    Note: The second formula requires that the ESP value is less than 50.
+                    <br />
                     <hr>
                     <table class="table table-striped">
                         <thead>
@@ -274,12 +279,6 @@
 
 
 
-    <footer class="navbar-default navbar-fixed-bottom">
-        <div class="container-fluid">
-            <p>
-                &copy; <span class="dynamic-year"></span> <span id="fd">Department of Soil Science, <br />North Dakota State University.</span><br />
-            </p>
-        </div>
-    </footer>
+   
 </body>
 </html>
