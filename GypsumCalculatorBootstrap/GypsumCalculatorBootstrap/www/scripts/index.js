@@ -30,6 +30,8 @@
         $('input[type=text]').each(function () {
             $(this).on("change", function () {
                 $('#resultSpan').text('');
+                $('#resultSpan2').text('');
+                $('#por').text('');
             });
         });
 
@@ -60,6 +62,8 @@
         clearBtnFull.click(function (e) {
             $(inputControlFull).val('');
             $('#resultSpan').text('');
+            $('#resultSpan2').text('');
+            $('#por').text('');
         });
     }
 
@@ -119,7 +123,7 @@
     // calculate gypsum requirement
     function OnCalculateBtnClick() {
         document.getElementById("calcBtn").addEventListener("click", function () {
-            var k = 0, f, gr;
+            var k = 0, f, gr, gr2;
             var alertstr = 'Invalid input for each of the following field(s):\n\n';
 
             var depthValue = NumericInputValidation('depthInput');
@@ -182,7 +186,10 @@
                     if (espfValue < espiValue) {
                         f = GetFactorValue(espfValue);
                         gr = GypsumRequirement(f, depthValue, densityValue, cecValue, espiValue, espfValue, purityValue);
-                        $('#resultSpan').text('' + gr.toFixed(1));
+                        gr2=gr*0.44609;
+                        $('#resultSpan').text(gr.toFixed(1) + ' Megagram/Hectare');
+                        $('#por').text('or');
+                        $('#resultSpan2').text(gr2.toFixed(1) + ' US Ton/Acre');
                     }
                     else
                         alert('Target ESP level must be lower than Initial ESP level!');
@@ -191,7 +198,10 @@
                     if (sarfValue < sariValue) {
                         f = GetFactorValue(sarfValue);
                         gr = GypsumRequirement(f, depthValue, densityValue, cecValue, sariValue, sarfValue, purityValue);
-                        $('#resultSpan').text('' + gr.toFixed(1));
+                        gr2=gr*0.44609;
+                        $('#resultSpan').text(gr.toFixed(1) + ' Megagram/Hectare');
+                        $('#por').text('or');
+                        $('#resultSpan2').text(gr2.toFixed(1) + ' US Ton/Acre');
                     }
                     else
                         alert('Target SAR level must be lower than Initial SAR level!');

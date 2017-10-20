@@ -1,16 +1,15 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<widget xmlns:cdv="http://cordova.apache.org/ns/1.0" xmlns:vs="http://schemas.microsoft.com/appx/2014/htmlapps" id="io.cordova.myappea78bc" version="1.0.0" xmlns="http://www.w3.org/ns/widgets" defaultlocale="en-US">
-  <name>Gypsum Calculator</name>
-  <description>
-Welcome to the NDSU gypsum requirement (GR) mobile app. The calculations are based on the equation of Oster et al. (1999). To determine GR (in Mg/ha; e.g. 1 Mg/ha = 1.1 tons/acre) the equation requires knowledge of the 1) depth, D, (in meters; e.g. 0.15 m = 6 inches) to which the gypsum will be applied, 2) the bulk density, Bd, of the soil (in Mg/m3; e.g. 1 Mg/m3 = 1 g/cm3; default value in the calculator is 1.47 Mg/m3), 3) the cation exchange capacity, CEC, of the soil (in mmolc/kg; e.g. 100 mmolc/kg = 10 cmolc/kg = 10 meq/kg), 4) the reaction efficiency factor, F, which is unitless (e.g. choose 1.3 if the final ESP is 5 and  1.1 if the final ESP is 15 or greater), 5) the initial ESP, ESPi, which is determined by a qualified laboratory (ESP is a % of the Na ions on the soil’s exchange sites), 6) the target, final ESP, ESPf, and 7) the purity of the gypsum being used (in %). 
+<widget xmlns:cdv="http://cordova.apache.org/ns/1.0" xmlns:vs="http://schemas.microsoft.com/appx/2014/htmlapps" id="ndsu.gypsum" version="1.0.0" xmlns="http://www.w3.org/ns/widgets" defaultlocale="en-US">
+  <name>Gypsum Requirement</name>
+  <description>There are over 70 million acres of naturally occurring sodic soils in the United States, and over 1.4 billion acres worldwide. Gypsum has been used as an amendment for over 100 years to improve the productivity of sodic soils. Gypsum does two things: 1) provides Ca2+ to displace Na+ from the soil’s exchange sites, and 2) maintains or increases the soil salinity.  Applying the correct amount of gypsum requires knowledge of soil parameters as well as the quality of the gypsum. By understanding what is required to calculate Gypsum Requirement will allow one to have the proper soil tests conducted so that the most accurate determination is made.
 
-You will need to adjust the final mass of gypsum based on the moisture content of the product you are using. For example, if the moisture content is 20% then take GR x 1.2 to get the mass of moist gypsum needed to supply GR.
+The Gypsum Requirement app for iPhone and Android can be used to answer the question “how much gypsum should I apply to my sodic soil?”  The calculator is based on the equation developed by North Dakota native Dr. James Oster and others. The app is easy to use and allows one to easily determine the Gypsum Requirement for sodic soils. 
 
-You can substitute the sodium adsorption ratio (SAR) determined from a saturated paste extract for the ESP if the ESP is less than 50.
+Gypsum Requirement Main Features
 
-The cost of applying gypsum will be much greater than the costs for determining the soil metrics outlined above so have your soils analyzed by your regional soil testing laboratory. Depth of your soil sample should be great enough to understand the depth that gypsum should be incorporated. Gypsum should be placed as near to the depth of sodic behavior as possible to maximize its effectiveness.
+Easily enter values for initial and final ESP or SAR, soil bulk density, depth needed to be treated, efficiency, gypsum purity, and cation exchange capacity.
 
-Oster, J.D., I. Shainberg, and I.P. Abrol. 1999. Reclamation of salt-affected soils. In 806 Agricultural Drainage. Agronomy Monograph no. 38. American Society of Agronomy, 807 Crop Science Society of America, Soil Science Society of America, 677 S. Segoe Rd. 808 Madison, WI 53711. USA. p.659-691.
+Gypsum Requirement is reported in units of Mg/ha or tons/acre.
 </description>
   <author href="" email="honggang.bu@ndsu.edu">Honggang Bu </author>
   <content src="index.html" />
@@ -119,4 +118,6 @@ Oster, J.D., I. Shainberg, and I.P. Abrol. 1999. Reclamation of salt-affected so
   <platform name="wp8">
     <splash src="res/screens/wp8/SplashScreenImage.png" width="768" height="1280" />
   </platform>
+  <plugin name="cordova-plugin-splashscreen" version="4.0.3" />
+  <preference name="deployment-target" value="10" />
 </widget>

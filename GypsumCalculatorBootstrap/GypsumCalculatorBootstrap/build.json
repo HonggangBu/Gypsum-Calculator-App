@@ -1,10 +1,10 @@
 {
   "android": {
     "release": {
-      "keystore": "",
-      "storePassword": "",
-      "alias": "",
-      "password": "",
+      "keystore": "C:\\BuProjects\\Gypsum-Calculator-App\\documents\\GR-release-key.keystore",
+      "storePassword": "bugu7879",
+      "alias": "HonggangBu",
+      "password": "bugu7879",
       "keystoreType": ""
     }
   },
@@ -19,7 +19,7 @@
     "release": {
       "developmentTeam": "FM3AXHLL3T",
       "codeSignIdentity": "iPhone Distribution",
-      "provisioningProfile": "",
+      "provisioningProfile": "080bdbf9-3154-4111-a616-1f1dbfe37015",
       "packageType": "app-store"
     }
   }

@@ -1,0 +1,6 @@
+io.cordova.myappea78bc
+
+keytool -genkey -v -keystore C:\BuProjects\Gypsum-Calculator-App\documents\GR-release-key.keystore -alias HonggangBu -keyalg RSA -keysize 2048 -validity 10000
+
+
+psw:bugu7879

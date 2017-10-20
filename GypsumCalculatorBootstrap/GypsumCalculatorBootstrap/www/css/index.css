@@ -94,8 +94,8 @@ hr {
     color: white;
 }
 
-#resultSpan {
-    font-size: x-large;
+#resultSpan, #resultSpan2 {
+    font-size: large;
     font-weight: bold;
 }
 
@@ -125,6 +125,7 @@ hr {
     }
 
 #resultDiv {
+    padding-top:10px;
     margin-bottom: 40px;
     background-color: aliceblue;
     color: black;
@@ -132,7 +133,7 @@ hr {
     font-size: medium;
     border: solid;
     border-color: darkgreen;
-    height: 80px;
+    height: 120px;
 }
 
 #contactInfo {
