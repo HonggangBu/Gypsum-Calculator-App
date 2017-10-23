@@ -118,12 +118,28 @@
         return 0.86 * fct * depth * density * cec * (iv - fv) / p;
     }
 
+    // 
+    function CalculateAndResultDisplay(depthValue, densityValue, cecValue, iValue, fValue, purityValue, espsarString) {
+        if (fValue < iValue) {
+            var f = GetFactorValue(fValue);
+            var gr = GypsumRequirement(f, depthValue, densityValue, cecValue, iValue, fValue, purityValue);
+            var gr2 = gr * 0.44609;
+            $('#resultSpan').text(gr.toFixed(1) + ' Megagram/Hectare');
+            $('#por').text('or');
+            $('#resultSpan2').text(gr2.toFixed(1) + ' US Ton/Acre');
+        }
+        else {
+            alert('Target ' + espsarString + ' level must be lower than Initial ' + espsarString + ' level!');
+        }
+
+    }
+
     // events On clicking the calculate button
     // get and validate each input value
     // calculate gypsum requirement
     function OnCalculateBtnClick() {
         document.getElementById("calcBtn").addEventListener("click", function () {
-            var k = 0, f, gr, gr2;
+            var k = 0;
             var alertstr = 'Invalid input for each of the following field(s):\n\n';
 
             var depthValue = NumericInputValidation('depthInput');
@@ -182,36 +198,13 @@
                 alert(alertstr);
             else {
                 // do calculation
-                if ($("input[name='optradio']:checked").val() === 'esp') {// if use ESP
-                    if (espfValue < espiValue) {
-                        f = GetFactorValue(espfValue);
-                        gr = GypsumRequirement(f, depthValue, densityValue, cecValue, espiValue, espfValue, purityValue);
-                        gr2=gr*0.44609;
-                        $('#resultSpan').text(gr.toFixed(1) + ' Megagram/Hectare');
-                        $('#por').text('or');
-                        $('#resultSpan2').text(gr2.toFixed(1) + ' US Ton/Acre');
-                    }
-                    else
-                        alert('Target ESP level must be lower than Initial ESP level!');
-                }
-                else {// if use SAR
-                    if (sarfValue < sariValue) {
-                        f = GetFactorValue(sarfValue);
-                        gr = GypsumRequirement(f, depthValue, densityValue, cecValue, sariValue, sarfValue, purityValue);
-                        gr2=gr*0.44609;
-                        $('#resultSpan').text(gr.toFixed(1) + ' Megagram/Hectare');
-                        $('#por').text('or');
-                        $('#resultSpan2').text(gr2.toFixed(1) + ' US Ton/Acre');
-                    }
-                    else
-                        alert('Target SAR level must be lower than Initial SAR level!');
-                }
-
+                if ($("input[name='optradio']:checked").val() === 'esp') // if use ESP
+                    CalculateAndResultDisplay(depthValue, densityValue, cecValue, espiValue, espfValue, purityValue, 'ESP')
+                else // if use SAR
+                    CalculateAndResultDisplay(depthValue, densityValue, cecValue, sariValue, sarfValue, purityValue, 'SAR')
             }
 
         });
-
-
 
     }
 
