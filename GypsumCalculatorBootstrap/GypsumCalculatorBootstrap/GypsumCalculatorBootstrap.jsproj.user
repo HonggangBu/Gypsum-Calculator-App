@@ -16,6 +16,6 @@
     <AndroidEmulatorID>4B675905-D130-4929-91C8-FC62E9C03A24;VS Emulator 5.7" Marshmallow (6.0.0) XHDPI Phone</AndroidEmulatorID>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|iOS'">
-    <DebuggerFlavor>RippleiPhone5</DebuggerFlavor>
+    <DebuggerFlavor>iOSRemoteDevice</DebuggerFlavor>
   </PropertyGroup>
 </Project>
